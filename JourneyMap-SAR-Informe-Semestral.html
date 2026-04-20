@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey Map - Informe Semestral de Progreso (SAR) | Portal del Cliente BID</title>
+<style>
+  :root {
+    --bid-blue: #0050B3;
+    --bid-cyan: #0090D9;
+    --bid-light: #E8F4FD;
+    --pain-red: #E53935;
+    --pain-light: #FFEBEE;
+    --desire-orange: #FF8F00;
+    --desire-light: #FFF3E0;
+    --success-green: #2E7D32;
+    --success-light: #E8F5E9;
+    --neutral-gray: #78909C;
+    --bg: #F5F7FA;
+    --card-bg: #FFFFFF;
+    --text: #263238;
+    --text-light: #546E7A;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-hover: 0 4px 24px rgba(0,0,0,0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  .header { background: linear-gradient(135deg, var(--bid-blue) 0%, var(--bid-cyan) 100%); color: white; padding: 40px 60px; }
+  .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+  .header .subtitle { font-size: 18px; opacity: 0.9; }
+  .header .meta { margin-top: 16px; font-size: 14px; opacity: 0.7; display: flex; gap: 24px; flex-wrap: wrap; }
+
+  .container { max-width: 1600px; margin: 0 auto; padding: 30px; }
+
+  .section-title { font-size: 24px; font-weight: 700; color: var(--bid-blue); margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 3px solid var(--bid-cyan); }
+  .section-subtitle { font-size: 18px; color: var(--text-light); margin-bottom: 20px; }
+
+  /* Executive Summary */
+  .exec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+  .exec-card { background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); text-align: center; }
+  .exec-card .number { font-size: 42px; font-weight: 800; }
+  .exec-card .label { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+  .exec-card.pain .number { color: var(--pain-red); }
+  .exec-card.desire .number { color: var(--desire-orange); }
+  .exec-card.success .number { color: var(--success-green); }
+  .exec-card.neutral .number { color: var(--bid-cyan); }
+
+  /* Journey Map Table */
+  .journey-container { overflow-x: auto; margin: 20px 0; }
+  .journey-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card-bg); border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; min-width: 1400px; }
+  .journey-table th { background: var(--bid-blue); color: white; padding: 14px 16px; font-size: 13px; font-weight: 600; text-align: center; position: sticky; top: 0; z-index: 10; }
+  .journey-table td { padding: 14px 16px; vertical-align: top; border-bottom: 1px solid #E0E0E0; font-size: 13px; }
+  .journey-table tr:last-child td { border-bottom: none; }
+  .journey-table .row-label { background: #F5F5F5; font-weight: 700; width: 140px; min-width: 140px; position: sticky; left: 0; z-index: 5; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .journey-table .stage-header { background: linear-gradient(135deg, var(--bid-light), #D6EAF8); font-weight: 700; color: var(--bid-blue); text-align: center; font-size: 14px; }
+
+  .pain-tag { background: var(--pain-light); color: var(--pain-red); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin: 2px 0; }
+  .desire-tag { background: var(--desire-light); color: var(--desire-orange); padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; margin: 2px 0; }
+  .severity-critical { border-left: 4px solid #B71C1C; }
+  .severity-high { border-left: 4px solid var(--pain-red); }
+  .severity-medium { border-left: 4px solid var(--desire-orange); }
+
+  .voice-quote { background: #FAFAFA; border-left: 3px solid var(--bid-cyan); padding: 8px 12px; margin: 6px 0; font-style: italic; font-size: 12px; color: #455A64; border-radius: 0 6px 6px 0; }
+  .voice-quote .speaker { font-weight: 700; font-style: normal; color: var(--bid-blue); display: block; font-size: 11px; margin-bottom: 2px; }
+
+  .recommendation { background: var(--success-light); border-left: 3px solid var(--success-green); padding: 8px 12px; margin: 6px 0; font-size: 12px; border-radius: 0 6px 6px 0; }
+  .recommendation strong { color: var(--success-green); }
+
+  .route-badge { background: var(--bid-blue); color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Consolas', monospace; display: inline-block; margin-bottom: 4px; }
+  .component-badge { background: #E8EAF6; color: #283593; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Consolas', monospace; display: inline-block; margin: 1px 0; }
+
+  /* Emotion Curve */
+  .emotion-curve-container { background: var(--card-bg); border-radius: 12px; padding: 30px; box-shadow: var(--shadow); margin: 30px 0; }
+  .emotion-curve-container h3 { color: var(--bid-blue); margin-bottom: 20px; font-size: 20px; }
+
+  /* Detail Cards */
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 24px; margin: 20px 0; }
+  .detail-card { background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); transition: box-shadow 0.3s; }
+  .detail-card:hover { box-shadow: var(--shadow-hover); }
+  .detail-card .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .detail-card .card-number { background: var(--bid-blue); color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .detail-card .card-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .detail-card .card-route { font-size: 12px; color: var(--text-light); font-family: monospace; }
+
+  .emotion-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .emotion-frustration { background: #FFCDD2; color: #C62828; }
+  .emotion-anxiety { background: #FFE0B2; color: #E65100; }
+  .emotion-exhaustion { background: #F3E5F5; color: #6A1B9A; }
+  .emotion-impotence { background: #FFCCBC; color: #BF360C; }
+  .emotion-confusion { background: #FFF9C4; color: #F57F17; }
+  .emotion-panic { background: #EF9A9A; color: #B71C1C; }
+  .emotion-relief { background: #C8E6C9; color: #2E7D32; }
+  .emotion-mixed { background: #D1C4E9; color: #4527A0; }
+
+  /* Survey data */
+  .survey-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 20px 0; }
+  .bar-chart { margin: 10px 0; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+  .bar-label { width: 130px; font-size: 12px; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 24px; background: #ECEFF1; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; color: white; font-weight: 600; transition: width 0.6s; }
+  .bar-fill.satisfaction { background: linear-gradient(90deg, var(--success-green), #43A047); }
+  .bar-fill.neutral-bar { background: linear-gradient(90deg, #FFB300, #FFA000); }
+  .bar-fill.negative { background: linear-gradient(90deg, var(--pain-red), #EF5350); }
+
+  /* NPS Voices */
+  .nps-voices { columns: 2; column-gap: 24px; margin: 20px 0; }
+  .nps-voice { break-inside: avoid; background: var(--card-bg); border-radius: 8px; padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .nps-voice .score { font-weight: 800; font-size: 18px; float: left; margin-right: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; }
+  .nps-voice .score.high { background: var(--success-green); }
+  .nps-voice .score.mid { background: var(--desire-orange); }
+  .nps-voice .score.low { background: var(--pain-red); }
+
+  .screenshot-container { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin: 20px 0; text-align: center; }
+  .screenshot-container img { max-width: 100%; border-radius: 8px; border: 1px solid #E0E0E0; }
+  .screenshot-container .caption { font-size: 13px; color: var(--text-light); margin-top: 10px; }
+
+  .footer { background: var(--bid-blue); color: white; padding: 30px 60px; margin-top: 40px; text-align: center; font-size: 13px; opacity: 0.9; }
+
+  /* SVG Tooltip */
+  .svg-tooltip {
+    position: absolute;
+    background: rgba(38, 50, 56, 0.95);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    max-width: 300px;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .svg-tooltip.visible { opacity: 1; }
+  .svg-tooltip .tt-emotion { font-weight: 700; display: block; margin-bottom: 4px; }
+  .svg-tooltip .tt-emotion.positive { color: #81C784; }
+  .svg-tooltip .tt-emotion.negative { color: #EF9A9A; }
+  .svg-tooltip .tt-emotion.neutral { color: #FFE082; }
+  .svg-tooltip .tt-emotion.mixed { color: #CE93D8; }
+
+  .emotion-curve-container { position: relative; }
+
+  svg .hover-point { cursor: pointer; transition: r 0.2s; }
+  svg .hover-point:hover { r: 14; }
+
+  .flag-img { width: 18px; height: 13px; vertical-align: middle; margin-right: 3px; border: 1px solid #ddd; border-radius: 2px; object-fit: cover; }
+
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 18px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-top: 4px;
+    border: 1px solid transparent;
+  }
+  .status-implemented { background: #E8F5E9; color: #1B5E20; border-color: #A5D6A7; }
+  .status-partial { background: #E3F2FD; color: #0D47A1; border-color: #90CAF9; }
+  .status-dev { background: #FFF8E1; color: #E65100; border-color: #FFCC80; }
+  .status-pending { background: #FFEBEE; color: #B71C1C; border-color: #EF9A9A; }
+  .status-none { background: #ECEFF1; color: #455A64; border-color: #CFD8DC; }
+  .status-backlog { background: #F3E5F5; color: #6A1B9A; border-color: #CE93D8; }
+  .status-tag a { color: inherit; }
+  .ticket-detail { display: block; font-size: 10px; color: var(--text-light); margin: 3px 0 6px; line-height: 1.35; }
+
+  .progress-bar-mini { width: 100%; height: 8px; background: #ECEFF1; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .progress-label { font-size: 11px; font-weight: 700; text-align: center; }
+
+  /* Modal para vistas propuestas */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+  .modal-overlay.active { display: flex; }
+  .modal-content { background: white; border-radius: 16px; max-width: 720px; width: 90%; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+  .modal-header { background: var(--bid-blue); color: white; padding: 18px 24px; border-radius: 16px 16px 0 0; display: flex; justify-content: space-between; align-items: center; }
+  .modal-header h3 { font-size: 16px; margin: 0; }
+  .modal-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0 4px; }
+  .modal-body { padding: 24px; }
+  .mockup-box { border: 2px solid #E0E0E0; border-radius: 12px; padding: 20px; margin: 12px 0; background: #FAFAFA; }
+  .mockup-label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .mockup-before { border-color: #FFCDD2; background: #FFF5F5; }
+  .mockup-after { border-color: #C8E6C9; background: #F1F8F1; }
+  .view-link { color: var(--bid-cyan); font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+  @media print {
+    .container { max-width: 100%; padding: 15px; }
+    .journey-table { font-size: 10px; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .svg-tooltip { display: none; }
+  }
+  @media (max-width: 768px) {
+    .exec-grid { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+    .nps-voices { columns: 1; }
+    .survey-grid { grid-template-columns: 1fr; }
+    .header { padding: 24px; }
+    .container { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>Journey Map - Informe Semestral de Progreso (SAR)</h1>
+  <div class="subtitle">Mapa de dolor, deseo y emocion real del usuario en el Portal del Cliente BID</div>
+  <div class="meta">
+    <span>Fuentes: 12 Entrevistas en profundidad + 295 Encuestas CSAT + 306 Encuestas NPS + Datadog Analytics + Blueprint Tecnico</span>
+    <span>|</span>
+    <span>Fecha: Abril 2026</span>
+    <span>|</span>
+    <span>Aplicacion: Angular 18 - client-portal-frontend v1.2.1</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============================================== -->
+<!-- VIDEO CONTEXTUAL DE LA INVESTIGACION           -->
+<!-- ============================================== -->
+<div style="background:var(--card-bg);border-radius:12px;box-shadow:var(--shadow);padding:30px;margin-bottom:30px;">
+  <h2 class="section-title" style="margin-top:0;">Contexto de la Investigacion</h2>
+  <p style="color:var(--text-light);margin-bottom:20px;font-size:14px;">Video resumen del proceso de investigacion con usuarios reales del Portal del Cliente BID  -  entrevistas en profundidad, encuestas NPS/CSAT y analisis de comportamiento.</p>
+  <div style="text-align:center;">
+    <video controls preload="metadata" style="width:100%;max-width:960px;border-radius:8px;border:1px solid #E0E0E0;box-shadow:0 2px 8px rgba(0,0,0,0.1);" poster="">
+      <source src="bid.mp4" type="video/mp4">
+      Su navegador no soporta el elemento de video. <a href="bid.mp4">Descargar video</a>.
+    </video>
+    <p style="font-size:12px;color:var(--text-light);margin-top:10px;">Fuentes: 12 Entrevistas en profundidad (Rep. Dominicana, Ecuador, Paraguay, Brasil, Trinidad y Tobago, Bahamas) + 295 Encuestas CSAT + 306 Encuestas NPS + Datadog Analytics</p>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<h2 class="section-title">Resumen Ejecutivo</h2>
+<div class="exec-grid">
+  <div class="exec-card pain">
+    <div class="number">76</div>
+    <div class="label">Dolores identificados<br>(Fricciones reales en la interfaz)</div>
+  </div>
+  <div class="exec-card desire">
+    <div class="number">25</div>
+    <div class="label">Deseos criticos<br>(Funcionalidades ausentes)</div>
+  </div>
+  <div class="exec-card neutral">
+    <div class="number">9</div>
+    <div class="label">Pantallas del flujo SAR<br>analizadas en este Journey Map</div>
+  </div>
+  <div class="exec-card success">
+    <div class="number">88%</div>
+    <div class="label">Satisfaccion positiva<br>(184 Muy satisfecho + 78 Satisfecho / 295)</div>
+  </div>
+</div>
+
+<div class="exec-grid">
+  <div class="exec-card pain">
+    <div class="number" style="font-size:28px">9</div>
+    <div class="label">Problemas UX detectados<br>de severidad CRITICA</div>
+  </div>
+  <div class="exec-card" style="border-top: 3px solid var(--pain-red);">
+    <div class="number" style="font-size:28px; color: var(--pain-red);">31</div>
+    <div class="label">Problemas UX detectados<br>de severidad ALTA</div>
+  </div>
+  <div class="exec-card" style="border-top: 3px solid var(--desire-orange);">
+    <div class="number" style="font-size:28px; color: var(--desire-orange);">26</div>
+    <div class="label">Problemas UX detectados<br>de severidad MEDIA</div>
+  </div>
+  <div class="exec-card success">
+    <div class="number" style="font-size:28px">6</div>
+    <div class="label">Fortalezas detectadas</div>
+  </div>
+</div>
+
+<!-- Screenshot de login eliminado: no aporta valor diagnostico al journey map -->
+
+<!-- ============================================== -->
+<!-- CURVA EMOCIONAL SVG -->
+<!-- ============================================== -->
+<div class="emotion-curve-container">
+  <h3>Curva Emocional del Usuario - Flujo Completo del Informe Semestral (SAR)</h3>
+  <p style="color: var(--text-light); margin-bottom: 20px; font-size: 14px;">Eje Y = Estado emocional del usuario (positivo arriba, negativo abajo). Cada punto marca una pantalla/etapa real del flujo.</p>
+
+  <svg viewBox="0 0 1200 420" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:1200px;">
+    <!-- Grid -->
+    <defs>
+      <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#0090D9"/>
+        <stop offset="30%" stop-color="#FF8F00"/>
+        <stop offset="55%" stop-color="#E53935"/>
+        <stop offset="75%" stop-color="#E53935"/>
+        <stop offset="85%" stop-color="#FF8F00"/>
+        <stop offset="100%" stop-color="#2E7D32"/>
+      </linearGradient>
+      <filter id="shadow2"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15"/></filter>
+    </defs>
+
+    <!-- Background zones -->
+    <rect x="80" y="20" width="1080" height="140" fill="#E8F5E9" opacity="0.3" rx="4"/>
+    <rect x="80" y="160" width="1080" height="40" fill="#FFF9C4" opacity="0.3" rx="4"/>
+    <rect x="80" y="200" width="1080" height="160" fill="#FFEBEE" opacity="0.3" rx="4"/>
+
+    <!-- Y axis labels -->
+    <text x="70" y="50" text-anchor="end" font-size="11" fill="#2E7D32" font-weight="600">Satisfecho</text>
+    <text x="70" y="110" text-anchor="end" font-size="11" fill="#43A047">Confiado</text>
+    <text x="70" y="180" text-anchor="end" font-size="11" fill="#FF8F00" font-weight="600">Neutral</text>
+    <text x="70" y="240" text-anchor="end" font-size="11" fill="#E53935">Frustrado</text>
+    <text x="70" y="300" text-anchor="end" font-size="11" fill="#C62828">Ansioso</text>
+    <text x="70" y="350" text-anchor="end" font-size="11" fill="#B71C1C" font-weight="600">Desesperado</text>
+
+    <!-- Horizontal grid lines -->
+    <line x1="80" y1="50" x2="1160" y2="50" stroke="#E0E0E0" stroke-dasharray="4"/>
+    <line x1="80" y1="110" x2="1160" y2="110" stroke="#E0E0E0" stroke-dasharray="4"/>
+    <line x1="80" y1="180" x2="1160" y2="180" stroke="#E0E0E0" stroke-dasharray="4"/>
+    <line x1="80" y1="240" x2="1160" y2="240" stroke="#E0E0E0" stroke-dasharray="4"/>
+    <line x1="80" y1="300" x2="1160" y2="300" stroke="#E0E0E0" stroke-dasharray="4"/>
+    <line x1="80" y1="350" x2="1160" y2="350" stroke="#E0E0E0" stroke-dasharray="4"/>
+
+    <!-- Emotion Curve Path -->
+    <!-- Points: Login(140,150) -> Dashboard(280,200) -> Tasks(400,170) -> GenInfo(520,140) -> ResultsMatrix(660,310) -> RiskMatrix(780,280) -> LessonsLearned(880,190) -> Annexes(960,170) -> SendReport(1060,330) -> Confirmation(1130,70) -->
+    <path d="M 140,150 C 180,160 240,195 280,200 C 320,205 360,180 400,170 C 440,160 480,145 520,140 C 560,140 610,230 660,310 C 700,330 740,300 780,280 C 810,260 850,200 880,190 C 910,185 930,175 960,170 C 990,175 1020,280 1060,330 C 1090,280 1110,110 1130,70"
+          fill="none" stroke="url(#curveGrad)" stroke-width="4" stroke-linecap="round" filter="url(#shadow2)"/>
+
+    <!-- Area fill -->
+    <path d="M 140,150 C 180,160 240,195 280,200 C 320,205 360,180 400,170 C 440,160 480,145 520,140 C 560,140 610,230 660,310 C 700,330 740,300 780,280 C 810,260 850,200 880,190 C 910,185 930,175 960,170 C 990,175 1020,280 1060,330 C 1090,280 1110,110 1130,70 L 1130,360 L 140,360 Z"
+          fill="url(#curveGrad)" opacity="0.07"/>
+
+    <!-- Data Points  -  Interactive with tooltips -->
+    <!-- 1. Login/Acceso -->
+    <circle class="hover-point" cx="140" cy="150" r="8" fill="#0090D9" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="neutral" data-title="Incertidumbre" data-desc="Pantalla en blanco sin indicador de progreso. No sabe si el sistema funciona o si su sesion caduco. La falta de acceso movil agrava la sensacion de exclusion."/>
+    <text x="140" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">1. LOGIN</text>
+    <text x="140" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">/login</text>
+
+    <!-- 2. Dashboard -->
+    <circle class="hover-point" cx="280" cy="200" r="8" fill="#FF8F00" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="negative" data-title="Frustracion" data-desc="Cliquea etiquetas de estado que parecen botones pero no responden. No encuentra ruta directa al SAR. Depende de correos externos."/>
+    <text x="280" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">2. DASHBOARD</text>
+    <text x="280" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">/home</text>
+
+    <!-- 3. Tasks -->
+    <circle class="hover-point" cx="400" cy="170" r="8" fill="#FF8F00" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="neutral" data-title="Confusion" data-desc="Oscila entre pestanas identicas sin certeza. El mensaje 'No hay informacion' aparece antes de cargar y genera abandono prematuro."/>
+    <text x="400" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">3. TAREAS</text>
+    <text x="400" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">/tasks</text>
+
+    <!-- 4. General Info -->
+    <circle class="hover-point" cx="520" cy="140" r="8" fill="#43A047" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="positive" data-title="Relativo alivio" data-desc="Seccion rapida y clara, pero datos erroneos de Convergencia no se pueden corregir. El modal fullscreen bloquea la navegacion lateral."/>
+    <text x="520" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">4. INFO GRAL</text>
+    <text x="520" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">/semi-annual-report</text>
+
+    <!-- 5. Results Matrix - CRITICAL -->
+    <circle class="hover-point" cx="660" cy="310" r="12" fill="#E53935" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="negative" data-title="Agotamiento + Ansiedad" data-desc="Sesiones de +1 hora con miedo al Error 401 que borra todo. Doble ventana para comparar. 'Somos especialistas convertidos en digitadores'. Doble scroll, celdas editables invisibles, limite de 2000 caracteres."/>
+    <text x="660" y="395" text-anchor="middle" font-size="10" fill="#E53935" font-weight="700">5. MATRIZ RESULT.</text>
+    <text x="660" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">card-body/results</text>
+    <rect x="600" y="318" width="120" height="18" rx="9" fill="#E53935"/>
+    <text x="660" y="331" text-anchor="middle" font-size="9" fill="white" font-weight="700">MAYOR FRICCION</text>
+
+    <!-- 6. Risk Matrix -->
+    <circle class="hover-point" cx="780" cy="280" r="8" fill="#E53935" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="negative" data-title="Impotencia" data-desc="No puede crear riesgos nuevos. Recurre al workaround de editar riesgos vencidos, comprometiendo la integridad de datos. Los cambios no se sincronizan con Convergencia."/>
+    <text x="780" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">6. RIESGOS</text>
+    <text x="780" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">risk-matrix</text>
+
+    <!-- 7. Lessons Learned -->
+    <circle class="hover-point" cx="880" cy="190" r="8" fill="#FF8F00" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="mixed" data-title="Ambivalencia" data-desc="Valora la innovacion de la IA pero siente que le quita autonomia narrativa. Quiere un 'borrador sugerido', no un reemplazo de su voz profesional."/>
+    <text x="880" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">7. LECCIONES</text>
+    <text x="880" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">lessons-learned</text>
+
+    <!-- 8. Annexes -->
+    <circle class="hover-point" cx="960" cy="170" r="8" fill="#FF8F00" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="neutral" data-title="Confusion leve" data-desc="Solo puede agregar enlaces, no archivos directamente. No sabe como gestionar permisos de acceso BID. Seccion opcional con menor friccion."/>
+    <text x="960" y="395" text-anchor="middle" font-size="10" fill="var(--text)" font-weight="600">8. ANEXOS</text>
+    <text x="960" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">annex-links</text>
+
+    <!-- 9. Send Report -->
+    <circle class="hover-point" cx="1060" cy="330" r="12" fill="#B71C1C" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="negative" data-title="Panico + Abandono" data-desc="El boton de envio 'desaparece' sin explicar que falta. El momento que deberia ser de alivio se convierte en la mayor causa de tickets de soporte. Sin confirmacion post-envio."/>
+    <text x="1060" y="395" text-anchor="middle" font-size="10" fill="#B71C1C" font-weight="700">9. ENVIO</text>
+    <text x="1060" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">send-report</text>
+    <rect x="1005" y="338" width="110" height="18" rx="9" fill="#B71C1C"/>
+    <text x="1060" y="351" text-anchor="middle" font-size="9" fill="white" font-weight="700">BLOQUEO DE ENVIO</text>
+
+    <!-- 10. Confirmation -->
+    <circle class="hover-point" cx="1130" cy="70" r="10" fill="#2E7D32" stroke="white" stroke-width="3" filter="url(#shadow2)"
+      data-emotion="positive" data-title="Alivio" data-desc="Informe enviado exitosamente. El usuario finalmente respira. Este momento positivo debe protegerse y reforzarse con confirmacion clara."/>
+    <text x="1130" y="395" text-anchor="middle" font-size="10" fill="#2E7D32" font-weight="700">10. ENVIADO</text>
+    <text x="1130" y="407" text-anchor="middle" font-size="9" fill="var(--text-light)">confirmacion</text>
+    <rect x="1095" y="50" width="70" height="16" rx="8" fill="#2E7D32"/>
+    <text x="1130" y="61" text-anchor="middle" font-size="9" fill="white" font-weight="600">ALIVIO</text>
+
+    <!-- Annotations -->
+    <line x1="660" y1="270" x2="660" y2="252" stroke="#B71C1C" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+    <rect x="598" y="232" width="125" height="20" rx="4" fill="#FFEBEE" stroke="#E53935"/>
+    <text x="660" y="246" text-anchor="middle" font-size="9" fill="#C62828" font-weight="600">Error 401 + Perdida datos</text>
+
+    <rect x="818" y="170" width="124" height="16" rx="4" fill="#E8EAF6"/>
+    <text x="880" y="181" text-anchor="middle" font-size="8" fill="#283593" font-weight="600">Automatizacion vs Control</text>
+  </svg>
+
+  <!-- Tooltip element -->
+  <div class="svg-tooltip" id="curveTooltip"></div>
+</div>
+
+<!-- Tooltip script -->
+<script>
+(function(){
+  var tip = document.getElementById('curveTooltip');
+  var container = tip.parentElement;
+  document.querySelectorAll('.hover-point').forEach(function(pt){
+    pt.addEventListener('mouseenter', function(e){
+      var emotion = pt.getAttribute('data-emotion');
+      var title = pt.getAttribute('data-title');
+      var desc = pt.getAttribute('data-desc');
+      tip.innerHTML = '<span class="tt-emotion '+emotion+'">'+title+'</span>'+desc;
+      tip.classList.add('visible');
+    });
+    pt.addEventListener('mousemove', function(e){
+      var rect = container.getBoundingClientRect();
+      var x = e.clientX - rect.left + 16;
+      var y = e.clientY - rect.top - 10;
+      if(x + 310 > rect.width) x = x - 330;
+      tip.style.left = x+'px';
+      tip.style.top = y+'px';
+    });
+    pt.addEventListener('mouseleave', function(){
+      tip.classList.remove('visible');
+    });
+  });
+})();
+</script>
+
+<!-- ============================================== -->
+<!-- JOURNEY MAP TABLE - MAIN -->
+<!-- ============================================== -->
+<h2 class="section-title">Journey Map Detallado por Pantalla</h2>
+<p class="section-subtitle">Cada columna representa una pantalla/etapa real del flujo SAR. Se cruzan 6 dimensiones de analisis.</p>
+
+<div class="journey-container">
+<table class="journey-table">
+<thead>
+<tr>
+  <th style="width:140px;">Dimension</th>
+  <th>1. Acceso y Login</th>
+  <th>2. Dashboard /home</th>
+  <th>3. Tareas /tasks</th>
+  <th>4. Info General</th>
+  <th style="background:#B71C1C;">5. Matriz Resultados</th>
+  <th>6. Matriz Riesgos</th>
+  <th>7. Lecciones Aprendidas</th>
+  <th>8. Anexos</th>
+  <th style="background:#B71C1C;">9. Envio Informe</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- FILA: Ruta y Componente -->
+<tr>
+  <td class="row-label">Ruta / Componente</td>
+  <td><span class="route-badge">B2C Azure AD</span><br><span class="component-badge">MSAL redirect</span></td>
+  <td><span class="route-badge">/home</span><br><span class="component-badge">project-card</span><br><span class="component-badge">dashboard</span></td>
+  <td><span class="route-badge">/tasks</span><br><span class="component-badge">tasks.component</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">card-main [0]</span><br><span class="component-badge">card-body</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">card-body [results]</span><br><span class="component-badge">results-matrix-table</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">risk-matrix-report</span><br><span class="component-badge">risk-matrix-semi-annual</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">lessons-learned</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">annex-links</span></td>
+  <td><span class="route-badge">/semi-annual-report</span><br><span class="component-badge">send-report</span></td>
+</tr>
+
+<!-- FILA: Accion del Usuario -->
+<tr>
+  <td class="row-label">Accion del Usuario</td>
+  <td>Ingresa credenciales. Espera redireccion al portal.</td>
+  <td>Busca la operacion correcta. Intenta localizar la tarea del informe semestral.</td>
+  <td>Identifica la tarea "Informe Semestral" entre pestanas de Operacion e Informe.</td>
+  <td>Revisa datos generales del proyecto (solo lectura). Navega al siguiente paso.</td>
+  <td>Llena avance fisico, financiero. Escribe notas de justificacion por cada indicador. Compara datos con reportes anteriores.</td>
+  <td>Revisa riesgos activos. Actualiza probabilidad, impacto, acciones de respuesta.</td>
+  <td>Responde 4 preguntas guia. La IA genera hallazgo y recomendacion. Revisa y edita.</td>
+  <td>Agrega enlaces a documentos externos. Opcional.</td>
+  <td>Genera PDF borrador. Revisa. Hace clic en "Enviar Informe Semestral".</td>
+</tr>
+
+<!-- FILA: Emocion Real -->
+<tr>
+  <td class="row-label" style="background: #FFF3E0;">Emocion Real</td>
+  <td><span class="emotion-badge emotion-confusion">Incertidumbre</span><br>No sabe si el link funciona, la pantalla tarda en cargar.</td>
+  <td><span class="emotion-badge emotion-frustration">Frustracion</span><br>No identifica donde ingresar. Las "pildoras" de estado enganan.</td>
+  <td><span class="emotion-badge emotion-confusion">Confusion</span><br>No diferencia entre pestanas "Operacion" e "Informe Semestral".</td>
+  <td><span class="emotion-badge emotion-relief">Relativo alivio</span><br>La info es clara, pero no puede corregir errores.</td>
+  <td><span class="emotion-badge emotion-exhaustion">Agotamiento</span><br><span class="emotion-badge emotion-anxiety">Ansiedad</span><br>Sesiones de +1h. Miedo a perder datos. Abre dos ventanas para comparar.</td>
+  <td><span class="emotion-badge emotion-impotence">Impotencia</span><br>No puede agregar riesgos nuevos. Modifica riesgos vencidos como parche.</td>
+  <td><span class="emotion-badge emotion-mixed">Ambivalencia</span><br>Aprecia IA pero siente que le quita autonomia.</td>
+  <td><span class="emotion-badge emotion-confusion">Confusion leve</span><br>Solo enlaces, no puede subir archivos directamente.</td>
+  <td><span class="emotion-badge emotion-panic">Panico</span><br><span class="emotion-badge emotion-frustration">Abandono</span><br>El boton no aparece. No sabe que falta. Llama a soporte.</td>
+</tr>
+
+<!-- FILA: Dolores Reales (Fricciones de lo ya desarrollado) -->
+<tr>
+  <td class="row-label" style="background: var(--pain-light);">Dolores Reales<br>(Fricciones)</td>
+  <td class="severity-high">
+    <span class="pain-tag">Latencia Ciega</span><br>
+    Pantalla en blanco hasta 2 min sin indicador de carga.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Daniel Diniz:</span>
+      "La pantalla queda totalmente en blanco y no muestra que esta cargando"
+    </div>
+    <span class="pain-tag">Permisos complejos</span><br>
+    Nuevos usuarios requieren formulario de aprovisionamiento via Salesforce.
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.2:</span>
+      "Se debe completar el formulario de aprovisionamiento y enviarlo al Team Leader y al analista del proyecto para su gestion en Salesforce"
+    </div>
+  </td>
+  <td class="severity-high">
+    <span class="pain-tag">Pildora Enganosa</span><br>
+    Etiquetas de estado parecen botones clicables pero no responden.
+    <div class="voice-quote">
+      <span class="speaker">Juan Edwin Etienne:</span>
+      "Cliqueo repetidamente la pildora de 'monitoreo' buscando ver detalles... no pasa nada"
+    </div>
+    <span class="pain-tag">Navegacion Intrusiva</span><br>
+    No hay acceso directo al SAR desde el dashboard.
+    <div class="voice-quote">
+      <span class="speaker">Evidencia Datadog:</span>
+      "No identifica donde ingresar inicialmente y solo lo logra tras revisar las notificaciones"
+    </div>
+  </td>
+  <td class="severity-high">
+    <span class="pain-tag">Ambiguedad de Seleccion</span><br>
+    Pestanas identicas sin jerarquia visual.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Michele Lemos (Datadog):</span>
+      "Movio el cursor reiteradamente entre Operacion e Informe Semestral antes de decidirse"
+    </div>
+    <span class="pain-tag">Falsa Vacuidad</span><br>
+    Muestra "No hay informacion" antes de terminar de cargar.
+  </td>
+  <td class="severity-high">
+    <span class="pain-tag">Oclusion Modal Full-Screen</span><br>
+    Al abrir sub-secciones 1.1-1.9, el modal cubre ~90% de la pantalla y bloquea el sidebar. El usuario no puede navegar a otra seccion sin cerrar primero.
+    <div class="voice-quote">
+      <span class="speaker">Evidencia UI (captura real):</span>
+      "El sidebar queda truncado e inaccesible bajo el modal. Sin breadcrumb ni indicador de posicion (1 de 9)."
+    </div>
+    <span class="pain-tag">Boton CLOSE alejado</span><br>
+    Boton "CLOSE" en esquina inferior derecha, lejos del area de trabajo. Boton X superior poco visible.
+    <br><span class="pain-tag">Datos no editables</span><br>
+    Si hay errores en la info general, no se pueden corregir desde el SAR.
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR:</span>
+      "Los errores deben explicarse mediante notas... no son editables"
+    </div>
+    <span class="pain-tag">Sin navegacion entre sub-secciones</span><br>
+    No hay botones "Anterior/Siguiente" dentro del modal  -  hay que cerrar y reabrir para pasar de 1.1 a 1.2.
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.3:</span>
+      "El sistema toma una 'captura' de la informacion existente en Convergencia en el momento en que el ejecutor accede por primera vez a cada seccion"
+    </div>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.4:</span>
+      "Las notas deben tener entre 5 y 2.000 caracteres, incluidos espacios"
+    </div>
+  </td>
+  <td class="severity-critical">
+    <span class="pain-tag">Error 401 Silencioso</span><br>
+    Sesion expira sin aviso. Datos perdidos.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Daniel Diniz:</span>
+      "Sufrio un Error 401 justo al intentar guardar... permanecio bloqueado 44 minutos"
+    </div>
+    <span class="pain-tag">Doble Scroll</span><br>
+    Scroll horizontal + vertical genera fatiga extrema.
+    <br><span class="pain-tag">Zona Editable Invisible</span><br>
+    Celdas editables indistinguibles de las de solo lectura.
+    <br><span class="pain-tag">Oclusion por Sticky</span><br>
+    Headers fijos reducen el espacio a una "rendija".
+    <div class="voice-quote">
+      <span class="speaker">Jaime Diaz:</span>
+      "Tuvo que alejar y acercar el zoom constantemente para compensar la falta de espacio"
+    </div>
+    <span class="pain-tag">Limite 2000 caracteres</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Carlos Galarza Arevalo (Encuesta):</span>
+      "El numero de caracteres es muy limitado para exponer con claridad el avance del proyecto"
+    </div>
+    <span class="pain-tag">Sin Autoguardado</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/tt.png" class="flag-img" alt="Trinidad y Tobago"> Cynthia Terry (Encuesta, Trinidad y Tobago):</span>
+      "I got error code 401 on two occasions and lost all work not saved. I wish there was an autosave feature."
+    </div>
+    <span class="pain-tag">Avances anteriores no editables</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.5:</span>
+      "Los anos anteriores no son editables y las correcciones deben explicarse mediante notas y regularizarse en Convergencia"
+    </div>
+    <span class="pain-tag">Sin alertas de inconsistencia</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ Interna Sec.5:</span>
+      "No hay alertas automaticas si el avance es menor al planificado o no se reprograma lo pendiente. Estas inconsistencias deben detectarse en la revision del banco."
+    </div>
+  </td>
+  <td class="severity-high">
+    <span class="pain-tag">No agregar riesgos</span><br>
+    No se pueden crear nuevos riesgos en el modulo.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/co.png" class="flag-img" alt="Colombia"> Carlos Alvarez Cadavid (Encuesta, Colombia):</span>
+      "No esta habilitada la opcion de registrar nuevos riesgos para los proximos periodos"
+    </div>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/do.png" class="flag-img" alt="Rep. Dominicana"> Cesareo Guillermo (Rep. Dominicana):</span>
+      "Tuvimos que modificar riesgos viejos que ya estaban vencidos para reflejar dos nuevos"
+    </div>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.6:</span>
+      "Los nuevos riesgos deben incluirse como anexos mediante enlaces externos"  -  workaround poco operativo
+    </div>
+    <span class="pain-tag">Cambios no impactan Convergencia</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.6:</span>
+      "Las modificaciones solo se reflejan en el PDF del SAR"  -  no se sincronizan con Convergencia
+    </div>
+    <span class="pain-tag">Iconografia confusa</span><br>
+    Semaforos de riesgo tienen mas peso visual que los botones de accion.
+  </td>
+  <td class="severity-medium">
+    <span class="pain-tag">IA poco flexible</span><br>
+    El texto generado a veces no da espacio a retroalimentacion real.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/py.png" class="flag-img" alt="Paraguay"> Bruno Candia (Entrevista, Paraguay):</span>
+      "La IA no nos daba muchos espacios para realmente hacer una retroalimentacion"
+    </div>
+    <span class="pain-tag">4 preguntas obligatorias</span><br>
+    Carga excesiva por leccion aprendida.
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.7:</span>
+      "La agencia debe responder cuatro preguntas guia: circunstancias, implicaciones, consecuencias y recomendaciones. Con esto, el sistema genera automaticamente un hallazgo y una recomendacion."
+    </div>
+    <span class="pain-tag">Leccion obligatoria</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.7:</span>
+      "Debe existir al menos una leccion aprendida para poder enviar el informe"
+    </div>
+  </td>
+  <td class="severity-medium">
+    <span class="pain-tag">Solo enlaces, no archivos</span><br>
+    No se pueden adjuntar archivos directamente.
+    <div class="voice-quote">
+      <span class="speaker">Rachel Perri (Encuesta):</span>
+      "I would like to have guidance on how to make a link for attachments"
+    </div>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/co.png" class="flag-img" alt="Colombia"> Nydia Beltran (Encuesta, Colombia):</span>
+      "Se sugiere poder cargar documentos en PDF"
+    </div>
+    <span class="pain-tag">Verificacion de permisos</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.8:</span>
+      "Se debe verificar que el BID tenga permisos de acceso a los documentos incluidos"  -  sin validacion automatica
+    </div>
+  </td>
+  <td class="severity-critical">
+    <span class="pain-tag">Boton desaparecido</span><br>
+    El boton de envio no aparece sin explicar que falta.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Luis Ochoa (Ecuador):</span>
+      "No me aparece el boton de envio para que el coordinador lo publique... simplemente queda vacio y toca llamar a reportar"
+    </div>
+    <span class="pain-tag">Sin feedback de validacion</span><br>
+    No indica que secciones estan incompletas.
+    <div class="voice-quote">
+      <span class="speaker">Blueprint Tecnico:</span>
+      "El estado 'Completado' no coincide con los detalles internos de los objetivos"
+    </div>
+    <span class="pain-tag">Sin confirmacion post-envio</span>
+    <div class="voice-quote">
+      <span class="speaker">Evidencia:</span>
+      "Despues de hacer clic en 'Enviar'... no aparece mensaje de confirmacion ni estado final visible"
+    </div>
+    <span class="pain-tag">Observaciones fuera del sistema</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.9:</span>
+      "Los comentarios del Banco no se realizan dentro del sistema. Se comunican por correo, nota oficial u otro canal externo."  -  sin trazabilidad digital
+    </div>
+    <span class="pain-tag">Permisos de envio opacos</span>
+    <div class="voice-quote">
+      <span class="speaker">FAQ SAR Sec.9:</span>
+      "Solo quienes cuenten con el permiso de Presentar el Informe Semestral pueden enviar el informe oficialmente"  -  el editor completa todo pero no puede enviar
+    </div>
+  </td>
+</tr>
+
+<!-- FILA: Deseos Importantes (No fricciones, sino ausencias) -->
+<tr>
+  <td class="row-label" style="background: var(--desire-light);">Deseos Criticos<br>(Ausencias que duelen)</td>
+  <td>
+    <span class="desire-tag">Acceso movil</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/do.png" class="flag-img" alt="Rep. Dominicana"> Adile Cruceta (Rep. Dominicana):</span>
+      "A veces mi laptop se queda en la oficina y quiero entrar... no puedo porque no tengo esta laptop conmigo"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Perfiles estandar con herencia</span><br>
+    Roles predefinidos (lector, editor, coordinador) en vez de formulario Salesforce manual. (Propuesta FAQ)
+    <br><span class="status-tag status-partial">PARCIAL</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-980" target="_blank">CLIEN-980</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-938" target="_blank">CLIEN-938</a> - permisos AccessEditSemiAnnualReport y SubmitSemiAnnualReport; faltan perfiles genericos.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Vision 360 del proyecto</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Jesus Dorado (Ecuador):</span>
+      "Me falta esa vision de ruta critica"
+    </div>
+    <span class="status-tag status-dev">EN PROCESO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1312" target="_blank">CLIEN-1312</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1506" target="_blank">CLIEN-1506</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1167" target="_blank">CLIEN-1167</a> - rediseño Ficha de Operacion y Teoria de Cambio; falta ruta critica.</span>
+    <span class="desire-tag">Ingreso rapido al SAR</span><br>
+    Boton prioritario en dashboard para ir directo al informe.
+    <br><span class="status-tag status-implemented">CUMPLIDO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1484" target="_blank">CLIEN-1484</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1312" target="_blank">CLIEN-1312</a> - componente Informe Semestral en Ficha con acceso y descarga.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Alertas proactivas</span><br>
+    No existen recordatorios de fecha limite.
+    <div class="voice-quote">
+      <span class="speaker">Evidencia:</span>
+      "No hay alertas que recuerden la fecha limite de envio de documentos o reportes financieros"
+    </div>
+    <span class="status-tag status-backlog">BACKLOG</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1481" target="_blank">CLIEN-1481</a> - epic ISP Notification to external users aun en backlog.</span>
+    <span class="desire-tag">Gestion multi-operacion</span><br>
+    Informes consolidados o referencia cruzada entre operaciones relacionadas. Actualmente un informe por operacion sin vinculacion. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Historial de versiones</span><br>
+    Ver informes semestrales anteriores.
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Carla Haro (Encuesta, Ecuador):</span>
+      "El sistema deberia tener en base al informe o informes semestrales enviados anteriormente como un historial"
+    </div>
+    <span class="status-tag status-implemented">CUMPLIDO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1484" target="_blank">CLIEN-1484</a> - acceso a PDF de informes anteriores desde la Ficha.</span>
+    <span class="desire-tag">Notas previas preservadas</span>
+    <div class="voice-quote">
+      <span class="speaker">Richard Paal (Encuesta):</span>
+      "It would be helpful if comments from the previous report could be included so those could be updated"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Panel lateral en vez de modal fullscreen</span><br>
+    Sub-secciones 1.1-1.9 como panel deslizable que mantenga el sidebar visible para navegacion continua.
+    <br><span class="status-tag status-dev">EN PROCESO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1531" target="_blank">CLIEN-1531</a> - rediseño del modal de Info General.</span>
+    <br><span class="desire-tag">Navegacion Anterior/Siguiente en modal</span><br>
+    Recorrer las 9 sub-secciones sin cerrar y reabrir cada vez.
+    <br><span class="status-tag status-dev">EN PROCESO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1531" target="_blank">CLIEN-1531</a> - posiblemente incluido en rediseño del modal; no confirmado explicitamente.</span>
+    <br><span class="desire-tag">Edicion con registro de cambios</span><br>
+    Campos bloqueados (equipo, fechas, montos) editables con trazabilidad y validacion posterior por equipo BID. (Propuesta FAQ)
+    <br><span class="status-tag status-implemented">CUMPLIDO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-856" target="_blank">CLIEN-856</a> - trazabilidad de cambios en descarga y envio.</span>
+    <br><span class="desire-tag">Flexibilidad operativa</span><br>
+    Ajustes historicos con trazabilidad. Apertura anticipada del SAR segun fecha contractual. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo para apertura anticipada del SAR ni ajustes historicos con trazabilidad.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Carga masiva Excel/CSV</span>
+    <div class="voice-quote">
+      <span class="speaker">Analisis:</span>
+      "Somos especialistas convertidos en digitadores"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Exportar a Excel</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ar.png" class="flag-img" alt="Argentina"> Maria Daira Yaconis (Encuesta, Argentina):</span>
+      "Seria muy util poder descargar las pestanas de indicadores y productos en excel"
+    </div>
+    <span class="status-tag status-partial">PARCIAL</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1203" target="_blank">CLIEN-1203</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1410" target="_blank">CLIEN-1410</a> - Excel implementado para Riesgos; falta Matriz de Resultados.</span>
+    <span class="desire-tag">Columnas sticky permanentes</span><br>
+    Nombres de indicadores siempre visibles al hacer scroll.
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Datos del periodo anterior como guia</span><br>
+    "No se que escribi el semestre pasado."
+    <br><span class="status-tag status-implemented">CUMPLIDO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1182" target="_blank">CLIEN-1182</a> - data visible en draft con version mas actualizada.</span>
+    <br><span class="desire-tag">Indicadores analiticos avanzados</span><br>
+    Valor ganado, proyecciones automaticas y alertas por inconsistencias fisico/financieras. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo para valor ganado ni proyecciones automaticas.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Poder crear riesgos nuevos</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/bs.png" class="flag-img" alt="Bahamas"> Kamika Salkie (Encuesta, Bahamas):</span>
+      "The system should allow for the addition of risks to the Risk Matrix"
+    </div>
+    <span class="status-tag status-dev">EN PROCESO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1144" target="_blank">CLIEN-1144</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1103" target="_blank">CLIEN-1103</a> - BE finalizado; historia madre aun en curso.</span>
+    <span class="desire-tag">Tracker de ruta critica</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Jesus Dorado (Ecuador):</span>
+      "Incluir un tracker de ruta critica que identifique los puntos claves para alcanzar el impacto"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Riesgos operativos de ultima milla</span><br>
+    Subcategoria para riesgos de cierre editable por el ejecutor. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <br><span class="desire-tag">Traduccion automatica editable</span><br>
+    Riesgos en ingles traducidos automaticamente con opcion de edicion. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+  </td>
+  <td>
+    <span class="desire-tag">IA como borrador sugerido</span><br>
+    Espacio real para la voz humana del ejecutor.
+    <br><span class="status-tag status-implemented">CUMPLIDO</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1116" target="_blank">CLIEN-1116</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1381" target="_blank">CLIEN-1381</a> - generacion con IA funcionando; mejora en backlog.</span>
+    <span class="desire-tag">Mas roles con acceso</span>
+    <div class="voice-quote">
+      <span class="speaker"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Carla Haro (Ecuador):</span>
+      "Que no solo sea seguimiento, adquisiciones y financiero... que el especialista legal tambien pueda retroalimentar"
+    </div>
+    <span class="status-tag status-partial">PARCIAL</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-980" target="_blank">CLIEN-980</a> - permisos diferenciados implementados; ampliacion a mas roles parcialmente cubierta.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Subir archivos directos</span><br>
+    No solo enlaces, sino PDFs directamente. (Propuesta FAQ)
+    <br><span class="status-tag status-backlog">BACKLOG</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1287" target="_blank">CLIEN-1287</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1282" target="_blank">CLIEN-1282</a> - servicio de carga y diseño en backlog.</span>
+    <br><span class="desire-tag">Repositorio documental</span>
+    <div class="voice-quote">
+      <span class="speaker">Evidencia:</span>
+      "Si me preguntan de donde sale este 50%, tengo que salir del portal a buscar los papeles"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Descarga masiva ZIP</span><br>
+    Para el equipo BID: descargar todos los anexos en un ZIP y previsualizar sin salir del portal. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+  </td>
+  <td>
+    <span class="desire-tag">Stepper de validacion</span><br>
+    Indicar exactamente que falta antes de enviar.
+    <br><span class="status-tag status-partial">PARCIAL</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1151" target="_blank">CLIEN-1151</a> - validaciones por seccion con checks verde/naranja; no es stepper visual tipo wizard.</span>
+    <span class="desire-tag">Reporte ejecutivo 1-clic</span><br>
+    Resumen que el coordinador pueda presentar a autoridades.
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+    <span class="desire-tag">Modo borrador colaborativo</span>
+    <div class="voice-quote">
+      <span class="speaker">Blueprint:</span>
+      "Crear un modulo de 'Borrador Meditado' que permita revision interna y validacion antes de la carga definitiva"
+    </div>
+    <span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo como modulo explicito.</span>
+    <span class="desire-tag">Observaciones dentro del sistema</span><br>
+    Funcionalidad de devolucion y rectificacion con registro formal y notificacion. (Propuesta FAQ)
+    <br><span class="status-tag status-backlog">BACKLOG</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1273" target="_blank">CLIEN-1273</a> - diseño para revision de comentarios y aprobacion por usuarios internos en backlog.</span>
+    <br><span class="desire-tag">Integracion SAR-Convergencia bidireccional</span><br>
+    Que la informacion ingresada en el SAR se sincronice automaticamente con Convergencia. (Propuesta FAQ)
+    <br><span class="status-tag status-partial">PARCIAL</span>
+    <span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1182" target="_blank">CLIEN-1182</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1497" target="_blank">CLIEN-1497</a> - data de Convergencia en draft para Resultados/Riesgos; falta bidireccionalidad.</span>
+    <br><span class="desire-tag">Feedback regional permanente</span><br>
+    Mecanismo integrado al ciclo de desarrollo para recoger retroalimentacion de ejecutores por region. (Propuesta FAQ)
+    <br><span class="status-tag status-none">SIN EVIDENCIA</span>
+    <span class="ticket-detail">No se encontro desarrollo relacionado.</span>
+  </td>
+</tr>
+
+<!-- FILA: Recomendaciones -->
+<tr>
+  <td class="row-label" style="background: var(--success-light);">Recomendaciones</td>
+  <td>
+    <div class="recommendation">
+      <strong>R1:</strong> Mostrar spinner de carga con mensaje "Conectando con el portal..." durante redireccion B2C.
+      <br><span class="status-tag status-implemented">IMPLEMENTADO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-652" target="_blank">CLIEN-652</a> - Ready for UAT</span>
+    </div>
+    <div class="recommendation">
+      <strong>R2:</strong> Alerta visual de "Sesion por expirar" a los 15 min de inactividad.
+      <br><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail">Logout timer existe (180 min inactividad) pero sin alerta previa al usuario</span>
+    </div>
+    <div class="recommendation">
+      <strong>R23:</strong> Perfiles estandar (lector, editor, coordinador) con herencia de permisos en vez de formulario Salesforce.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R3:</strong> Eliminar hover/cursor:pointer de etiquetas de estado. Diferenciar visualmente de botones.
+    </div>
+    <div class="recommendation">
+      <strong>R4:</strong> Boton "Ingresar al Informe Semestral" prioritario en tabla de tareas del dashboard.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R5:</strong> Usar botones "Filled" para la accion prioritaria. Anclar acceso principal al inicio.
+    </div>
+    <div class="recommendation">
+      <strong>R6:</strong> Mostrar loading states en lugar de "No hay informacion" antes de que cargue.
+      <br><span class="status-tag status-dev">EN PROCESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-652" target="_blank">CLIEN-652</a> - En validacion UAT</span>
+    </div>
+    <div class="recommendation">
+      <strong>R24:</strong> Habilitar gestion multi-operacion: informes consolidados o referencia cruzada entre operaciones relacionadas.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R7:</strong> Permitir agregar notas aclaratorias visibles junto a datos no editables.
+    </div>
+    <div class="recommendation">
+      <strong>R8:</strong> Migrar comentarios del informe anterior como referencia editable.
+    </div>
+    <div class="recommendation">
+      <strong>R8b:</strong> Reemplazar modal fullscreen por panel lateral deslizable que mantenga el sidebar visible.
+      <br><span class="status-tag status-none">SIN PROGRESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1100" target="_blank">CLIEN-1100</a> - Ready for Analysis</span>
+    </div>
+    <div class="recommendation">
+      <strong>R8c:</strong> Agregar navegacion "Anterior / Siguiente" dentro del modal para recorrer sub-secciones 1.1-1.9 sin cerrar.
+      <br><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-557" target="_blank">CLIEN-557</a></span>
+    </div>
+    <div class="recommendation">
+      <strong>R8d:</strong> Agregar breadcrumb o indicador de posicion (ej. "1.1 de 9") dentro del modal.
+    </div>
+    <div class="recommendation">
+      <strong>R25:</strong> Edicion controlada de campos bloqueados con registro de cambios y validacion posterior por equipo BID.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R9:</strong> Implementar Sticky Columns para nombres de indicadores + Sticky Header para periodos.
+      <br><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-733" target="_blank">CLIEN-733</a></span>
+    </div>
+    <div class="recommendation">
+      <strong>R10:</strong> Autoguardado cada 30 seg con indicador "Guardado hace X min".
+    </div>
+    <div class="recommendation">
+      <strong>R11:</strong> Contador de caracteres dinamico visible en cada campo de texto.
+      <br><span class="status-tag status-implemented">IMPLEMENTADO</span><span class="ticket-detail">rich-text-editor.component con charCount, showCharCount y charCountExceeded</span>
+    </div>
+    <div class="recommendation">
+      <strong>R12:</strong> Ampliar limite a 4000 caracteres o eliminar limite con scroll.
+      <br><span class="status-tag status-implemented">IMPLEMENTADO</span><span class="ticket-detail">noEmptyStringValidator(4000) en EOI; maxLength configurable via @Input</span>
+    </div>
+    <div class="recommendation">
+      <strong>R13:</strong> Habilitar carga masiva via Excel/CSV.
+    </div>
+    <div class="recommendation">
+      <strong>R26:</strong> Indicadores analiticos avanzados: valor ganado, proyecciones automaticas y alertas por inconsistencias fisico/financieras.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R14:</strong> Permitir creacion de nuevos riesgos directamente en el modulo SAR.
+      <br><span class="status-tag status-dev">EN PROCESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1103" target="_blank">CLIEN-1103</a></span>
+    </div>
+    <div class="recommendation">
+      <strong>R15:</strong> Redefinir jerarquia visual: botones de accion > etiquetas de estado.
+    </div>
+    <div class="recommendation">
+      <strong>R27:</strong> Traduccion automatica editable para riesgos en ingles desde sistemas internos.
+    </div>
+    <div class="recommendation">
+      <strong>R28:</strong> Subcategoria de riesgos operativos de "ultima milla" editables por el ejecutor.
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R16:</strong> Posicionar IA como "borrador sugerido" con espacio claro para edicion humana.
+      <br><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-920" target="_blank">CLIEN-920</a></span>
+    </div>
+    <div class="recommendation">
+      <strong>R17:</strong> Agregar boton "Auto-resumen IA" como opcion, no como reemplazo.
+      <br><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-920" target="_blank">CLIEN-920</a></span>
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R18:</strong> Permitir carga directa de archivos PDF ademas de enlaces.
+    </div>
+    <div class="recommendation">
+      <strong>R19:</strong> Instrucciones claras de como compartir enlaces con permisos BID.
+      <br><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-524" target="_blank">CLIEN-524</a></span>
+    </div>
+    <div class="recommendation">
+      <strong>R29:</strong> Descarga masiva ZIP de anexos y previsualizacion sin salir del portal (para equipo BID).
+    </div>
+  </td>
+  <td>
+    <div class="recommendation">
+      <strong>R20:</strong> Reemplazar boton deshabilitado por Stepper de Validacion con enlace directo a secciones incompletas.
+      <br><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-555" target="_blank">CLIEN-555</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-557" target="_blank">CLIEN-557</a> - Bugs activos</span>
+    </div>
+    <div class="recommendation">
+      <strong>R21:</strong> Mensaje de confirmacion claro post-envio con resumen y PDF descargable.
+      <br><span class="status-tag status-implemented">IMPLEMENTADO</span><span class="ticket-detail">ConfirmCancelDialogComponent con Material Dialog disponible</span>
+    </div>
+    <div class="recommendation">
+      <strong>R22:</strong> Generar "Reporte Ejecutivo 1-clic" para presentaciones a autoridades.
+    </div>
+    <div class="recommendation">
+      <strong>R30:</strong> Integracion SAR-Convergencia bidireccional: sincronizacion automatica para eliminar doble carga.
+      <br><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1497" target="_blank">CLIEN-1497</a> - Solo consume datos; integracion bidireccional pendiente</span>
+    </div>
+    <div class="recommendation">
+      <strong>R31:</strong> Observaciones y devolucion del Banco dentro del sistema con registro formal y notificacion.
+      <br><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail">dialog-comments (add-comment, comments-list) existe; adaptable para observaciones del Banco</span>
+    </div>
+    <div class="recommendation">
+      <strong>R32:</strong> Mecanismo permanente de feedback regional integrado al ciclo de desarrollo.
+    </div>
+  </td>
+</tr>
+
+<!-- FILA: % Mejora Actual -->
+<tr>
+  <td class="row-label" style="background: #E3F2FD;">% Mejora Actual<br><span style="font-size:9px;font-weight:400;text-transform:none;">(Dolores resueltos vs totales en codigo)</span></td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#FF8F00;">50%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:50%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R1 implementado<br>R23 pendiente</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#B71C1C;">0%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:0%;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R3, R4 pendientes</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#E65100;">15%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:15%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R6 parcial<br>R5 pendiente</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#E65100;">20%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:20%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R8c finalizada<br>R8b en analisis<br>R7, R8d pendientes</div>
+  </td>
+  <td style="text-align:center;background:#FFF8E1;">
+    <div class="progress-label" style="color:#E65100;">50%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:50%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R9, R11, R12 finalizadas<br>R2 parcial<br>R10, R13 pendientes</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#E65100;">25%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:25%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R14 en curso<br>R30 parcial<br>R15 pendiente</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#2E7D32;">100%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:100%;background:#2E7D32;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R16, R17 finalizadas<br>CLIEN-920</div>
+  </td>
+  <td style="text-align:center;">
+    <div class="progress-label" style="color:#E65100;">20%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:20%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R19 parcial<br>R18 pendiente</div>
+  </td>
+  <td style="text-align:center;background:#FFF8E1;">
+    <div class="progress-label" style="color:#E65100;">30%</div>
+    <div class="progress-bar-mini"><div class="progress-fill" style="width:30%;background:#FF8F00;"></div></div>
+    <div style="font-size:9px;color:var(--text-light);margin-top:3px;">R21 implementado<br>R20, R31 parcial<br>R22, R32 pendientes</div>
+  </td>
+</tr>
+
+<!-- FILA: Metricas -->
+<tr>
+  <td class="row-label">Metricas Clave</td>
+  <td>Pantalla en blanco: hasta 2 min</td>
+  <td>Dead clicks en pildoras: frecuente (Datadog)</td>
+  <td>Tiempo decision tab: +30 seg (Datadog)</td>
+  <td>Seccion mas rapida del flujo</td>
+  <td style="background: #FFEBEE;"><strong>Sesiones: hasta 1h 21min</strong><br>Ventanas paralelas: 2<br>Error 401: critico<br>Tickets soporte: alto</td>
+  <td>Workaround: editar riesgos vencidos</td>
+  <td>Percepcion IA: 60% positiva, 40% reserva</td>
+  <td>Seccion opcional - menor friccion</td>
+  <td style="background: #FFEBEE;"><strong>Tickets soporte "boton vacio": alto</strong><br>Tasa abandono: significativa</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<!-- ============================================== -->
+<!-- DETALLE POR PANTALLA -->
+<!-- ============================================== -->
+<h2 class="section-title">Sintesis Emocional por Pantalla</h2>
+<p class="section-subtitle">Resumen del estado emocional predominante en cada etapa del flujo. Los dolores, deseos y recomendaciones se encuentran en el Journey Map (arriba) como fuente unica de verdad.</p>
+
+<div class="detail-grid">
+
+<!-- Synthesis 1: Login -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">1</div>
+    <div>
+      <div class="card-title">Acceso y Autenticacion</div>
+      <div class="card-route">B2C Azure AD &rarr; /home</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-confusion">Incertidumbre</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Pantalla en blanco sin indicador de progreso. No sabe si el sistema funciona o si su sesion caduco. La falta de acceso movil agrava la sensacion de exclusion.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 2 | <strong>Deseos:</strong> 1 | <strong>Severidad:</strong> Alta</p>
+</div>
+
+<!-- Synthesis 2: Dashboard -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">2</div>
+    <div>
+      <div class="card-title">Dashboard de Proyectos</div>
+      <div class="card-route">/home</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-frustration">Frustracion</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Cliquea etiquetas de estado creyendo que son botones. No encuentra ruta directa al SAR. Depende de correos externos para saber que debe completar el informe.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 2 | <strong>Deseos:</strong> 2 | <strong>Severidad:</strong> Alta</p>
+</div>
+
+<!-- Synthesis 3: Tasks -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">3</div>
+    <div>
+      <div class="card-title">Pestana de Tareas</div>
+      <div class="card-route">/tasks</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-confusion">Confusion</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Oscila entre pestanas identicas sin certeza. El mensaje "No hay informacion" (que aparece antes de cargar) genera abandono prematuro o recargas innecesarias.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 2 | <strong>Deseos:</strong> 1 | <strong>Severidad:</strong> Alta</p>
+</div>
+
+<!-- Synthesis 4: Info General -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">4</div>
+    <div>
+      <div class="card-title">Informacion General del SAR</div>
+      <div class="card-route">/semi-annual-report</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-relief">Relativo alivio</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> La seccion es rapida, pero la impotencia ante datos erroneos de Convergencia que no puede corregir genera desconfianza. El modal fullscreen bloquea la navegacion lateral.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 4 | <strong>Deseos:</strong> 4 | <strong>Severidad:</strong> Alta (oclusion modal)</p>
+</div>
+
+<!-- Synthesis 5: Results Matrix - CRITICAL -->
+<div class="detail-card" style="border: 2px solid var(--pain-red);">
+  <div class="card-header">
+    <div class="card-number" style="background: var(--pain-red);">5</div>
+    <div>
+      <div class="card-title" style="color: var(--pain-red);">Matriz de Resultados - MAYOR FRICCION</div>
+      <div class="card-route">/semi-annual-report &rarr; results-matrix-table</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-exhaustion">Agotamiento extremo</span>
+  <span class="emotion-badge emotion-anxiety">Ansiedad por perdida de datos</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Sesiones de +1 hora con miedo constante al Error 401 que borra todo el trabajo. Abre dos ventanas para comparar. El doble scroll y las celdas editables indistinguibles de las de solo lectura generan fatiga extrema. Se sienten "especialistas convertidos en digitadores".</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 7 | <strong>Deseos:</strong> 4 | <strong>Severidad:</strong> Critica  -  convergencia de los 5 dolores mas severos del flujo</p>
+</div>
+
+<!-- Synthesis 6: Risk Matrix -->
+<div class="detail-card" style="border: 2px solid var(--desire-orange);">
+  <div class="card-header">
+    <div class="card-number" style="background: var(--desire-orange);">6</div>
+    <div>
+      <div class="card-title">Matriz de Riesgos</div>
+      <div class="card-route">/semi-annual-report &rarr; risk-matrix</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-impotence">Impotencia</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> No puede crear riesgos nuevos. Recurre al workaround de editar riesgos vencidos, comprometiendo la integridad de los datos. Los cambios no se sincronizan con Convergencia.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 3 | <strong>Deseos:</strong> 4 | <strong>Severidad:</strong> Alta</p>
+</div>
+
+<!-- Synthesis 7: Lessons Learned -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">7</div>
+    <div>
+      <div class="card-title">Lecciones Aprendidas (IA)</div>
+      <div class="card-route">/semi-annual-report &rarr; lessons-learned</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-mixed">Ambivalencia</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Valora la innovacion de la IA pero siente que le quita autonomia narrativa. Quiere que la IA sea un "borrador sugerido", no un reemplazo de su voz. Las 4 preguntas obligatorias por leccion aprendida generan carga excesiva.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 3 | <strong>Deseos:</strong> 2 | <strong>Severidad:</strong> Media  -  confusion entre automatizacion y control</p>
+</div>
+
+<!-- Synthesis 8: Annexes -->
+<div class="detail-card">
+  <div class="card-header">
+    <div class="card-number">8</div>
+    <div>
+      <div class="card-title">Anexos y Enlaces</div>
+      <div class="card-route">/semi-annual-report &rarr; annex-links</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-confusion">Confusion leve</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> Solo puede agregar enlaces, no archivos directamente. No sabe como gestionar permisos de acceso BID. Seccion opcional con menor friccion, pero deseo claro de carga directa.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 2 | <strong>Deseos:</strong> 3 | <strong>Severidad:</strong> Media</p>
+</div>
+
+<!-- Synthesis 9: Send Report - CRITICAL -->
+<div class="detail-card" style="border: 2px solid #B71C1C;">
+  <div class="card-header">
+    <div class="card-number" style="background: #B71C1C;">9</div>
+    <div>
+      <div class="card-title" style="color: #B71C1C;">Envio del Informe - BLOQUEO DE ENVIO</div>
+      <div class="card-route">/semi-annual-report &rarr; send-report</div>
+    </div>
+  </div>
+  <span class="emotion-badge emotion-panic">Panico</span>
+  <span class="emotion-badge emotion-frustration">Abandono</span>
+  <p style="margin-top:8px; font-size:13px;"><strong>Que siente el usuario:</strong> El boton de envio "desaparece" sin explicar que secciones faltan. El momento que deberia ser de alivio se convierte en la mayor causa de tickets de soporte. No hay confirmacion post-envio ni trazabilidad de observaciones del Banco.</p>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;"><strong>Dolores:</strong> 5 | <strong>Deseos:</strong> 5 | <strong>Severidad:</strong> Critica  -  principal causa de abandono y soporte</p>
+</div>
+
+</div><!-- end detail-grid -->
+
+<!-- ============================================== -->
+<!-- DATOS DE ENCUESTAS -->
+<!-- ============================================== -->
+<h2 class="section-title">Datos Cuantitativos - Encuesta SAR (295 respuestas)</h2>
+
+<div class="survey-grid">
+  <div class="detail-card">
+    <h4 style="color: var(--bid-blue); margin-bottom: 16px;">Satisfaccion con el Informe Semestral</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Muy satisfecho</div>
+        <div class="bar-track"><div class="bar-fill satisfaction" style="width:63%">184 (63%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Satisfecho</div>
+        <div class="bar-track"><div class="bar-fill satisfaction" style="width:27%">78 (27%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Neutral</div>
+        <div class="bar-track"><div class="bar-fill neutral-bar" style="width:5.5%">16</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Insatisfecho</div>
+        <div class="bar-track"><div class="bar-fill negative" style="width:1.7%">5</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Muy insatisfecho</div>
+        <div class="bar-track"><div class="bar-fill negative" style="width:3%">9</div></div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-light); margin-top: 10px;">88% positivo (Muy satisfecho + Satisfecho). Sin embargo, las voces del 12% restante revelan dolores criticos.</p>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--bid-blue); margin-bottom: 16px;">Facilidad para Completar el SAR</h4>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Muy facil</div>
+        <div class="bar-track"><div class="bar-fill satisfaction" style="width:27%">79 (27%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Facil</div>
+        <div class="bar-track"><div class="bar-fill satisfaction" style="width:43%">126 (43%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Neutral</div>
+        <div class="bar-track"><div class="bar-fill neutral-bar" style="width:21%">63 (21%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Dificil</div>
+        <div class="bar-track"><div class="bar-fill negative" style="width:2%">6</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Muy dificil</div>
+        <div class="bar-track"><div class="bar-fill negative" style="width:1.4%">4</div></div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-light); margin-top: 10px;">21% Neutral = usuarios que no se quejan pero tampoco fluyen. Los 10 que reportan dificil/muy dificil son los mas vocales en feedback.</p>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- VOCES NPS RELEVANTES -->
+<!-- ============================================== -->
+<h2 class="section-title">Voces Reales del Usuario - NPS y Encuestas</h2>
+<p class="section-subtitle">Seleccion de comentarios mas relevantes organizados por tipo de dolor</p>
+
+<div class="nps-voices">
+
+  <div class="nps-voice">
+    <div class="score low">0</div>
+    <p><strong><img src="https://flagcdn.com/w20/ht.png" class="flag-img" alt="Haiti"> Haiti:</strong> "A veces pasa que no puedo subir al portal y cuando consigo entrar no hay una ausencia de las dos partes del proyecto, lo que hace imposible que vea el OPS."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score low">0</div>
+    <p><strong><img src="https://flagcdn.com/w20/pa.png" class="flag-img" alt="Panama"> Panama:</strong> "Muchos bugs"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score low">2</div>
+    <p><strong><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Ecuador:</strong> "No tiene una interfaz amigable, se requiere hacer ajustes a los flujos y mapa del sitio"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score low">3</div>
+    <p><strong><img src="https://flagcdn.com/w20/bo.png" class="flag-img" alt="Bolivia"> Bolivia:</strong> "Se debera por lo menos ver los demas modulos solo para consulta"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score low">4</div>
+    <p><strong><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Brasil:</strong> "No es tan intuitivo como deberia ser"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score low">4</div>
+    <p><strong><img src="https://flagcdn.com/w20/do.png" class="flag-img" alt="Rep. Dominicana"> Rep. Dominicana:</strong> "Requiere mejoras urgentes en cuanto al procesamiento de la informacion. Se cierra o se congela constantemente, lo que convierte la tarea en labores extensas e interminables."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">5</div>
+    <p><strong><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Brasil:</strong> "Seria genial un manual/guia, aunque sea simplificado!"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">5</div>
+    <p><strong><img src="https://flagcdn.com/w20/co.png" class="flag-img" alt="Colombia"> Colombia:</strong> "Mejorar el sistema para que no se requiera colocar tantos tickets"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">5</div>
+    <p><strong><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Ecuador:</strong> "Me gustaria que el portal del cliente fuera mas amigable con el usuario"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">5</div>
+    <p><strong><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Brasil:</strong> "La rendicion de cuentas esta bien definida con procesos digitalizados. El acceso a los informes no es completo, especialmente OPS1."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">7</div>
+    <p><strong><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Ecuador:</strong> "Falta mayor publicidad para informar los cambios que se tiene previsto realizar y cuando"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">7</div>
+    <p><strong><img src="https://flagcdn.com/w20/jm.png" class="flag-img" alt="Jamaica"> Jamaica:</strong> "Buen sistema, pero aun tiene algunos huecos"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">7</div>
+    <p><strong><img src="https://flagcdn.com/w20/py.png" class="flag-img" alt="Paraguay"> Paraguay:</strong> "El portal no permite tener en simultaneo mas de una entrada en un proceso"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">8</div>
+    <p><strong><img src="https://flagcdn.com/w20/ar.png" class="flag-img" alt="Argentina"> Argentina:</strong> "Seria conveniente que, al momento de producirse un error en el sistema, se indique de manera explicita el motivo del mismo."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">8</div>
+    <p><strong><img src="https://flagcdn.com/w20/co.png" class="flag-img" alt="Colombia"> Colombia:</strong> "El soporte del chat no es bueno, las respuestas a los requerimientos toman demasiado tiempo"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score mid">8</div>
+    <p><strong><img src="https://flagcdn.com/w20/mx.png" class="flag-img" alt="Mexico"> Mexico:</strong> "El sistema es impreciso, aunque comprensible dado que la funcionalidad de envio de informes es nueva."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score high">10</div>
+    <p><strong><img src="https://flagcdn.com/w20/bs.png" class="flag-img" alt="Bahamas"> Bahamas:</strong> "Buena plataforma. Menos clics cuando es posible para terminar mi trabajo."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score high">10</div>
+    <p><strong><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Brasil:</strong> "Portal intuitivo, que busca consolidar en un unico entorno toda la informacion y actualizaciones destinadas a los ejecutores."</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score high">10</div>
+    <p><strong><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Ecuador:</strong> "La plataforma es muy util para gestionar los procesos del programa"</p>
+  </div>
+
+  <div class="nps-voice">
+    <div class="score high">9</div>
+    <p><strong><img src="https://flagcdn.com/w20/sv.png" class="flag-img" alt="El Salvador"> El Salvador:</strong> "Muy buena plataforma, mucho mejor que el STEP del Banco Mundial"</p>
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- RESUMEN ENTREVISTAS EN PROFUNDIDAD -->
+<!-- ============================================== -->
+<h2 class="section-title">Hallazgos de Entrevistas en Profundidad</h2>
+<p class="section-subtitle">Extractos clave de 12 entrevistas con usuarios de Republica Dominicana, Ecuador, Paraguay, Brasil y mas</p>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <h4 style="color: var(--pain-red);"><img src="https://flagcdn.com/w20/do.png" class="flag-img" alt="Rep. Dominicana"> Adile Cruceta - Rep. Dominicana (Adquisiciones)</h4>
+    <div class="voice-quote">"Como yo no imaginaba que yo tenia que dar a los tres punticos para buscar agregar las adendas?" - Funciones criticas ocultas en menu de 3 puntos</div>
+    <div class="voice-quote">"Duramos como una semana diciendo 'el banco no nos ha dado respuesta' y cuando conversamos nos dijeron 'ya eso fue aprobado'" - Correos de notificacion no enviados</div>
+    <div class="voice-quote">"Aprendimos que en vez de esperar el correo, entramos al portal y revisamos las notificaciones" - Workaround aprendido por el usuario</div>
+    <div class="voice-quote">"El financiero siempre tiene un tema con el desembolso... el link se vence" - Sesiones que expiran</div>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--pain-red);"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Luis Ochoa - Ecuador (Adquisiciones, 10 anos exp.)</h4>
+    <div class="voice-quote">"Cargo un hito, una actividad, tengo que publicar un documento... pero no me aparece el boton de envio. Simplemente queda vacio y toca llamar a reportar para que le mantengan un ticket."</div>
+    <div class="voice-quote">"Ahorita estoy teniendo el inconveniente de descargarme el raw data, entonces es aja."</div>
+    <div class="voice-quote">"Ahora ya se actualiza, ya no se requiere una objecion, me parecio muy chevere" - Reconoce mejoras positivas</div>
+    <div class="voice-quote">"Deberia haber un solo recurso y nada mas y que deberian informar de que los documentos han sido actualizados"</div>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--desire-orange);"><img src="https://flagcdn.com/w20/ec.png" class="flag-img" alt="Ecuador"> Carla Haro - Ecuador (Especialista)</h4>
+    <div class="voice-quote">"Solo seria el tema de que se abra la oportunidad en el sistema de que no solo sea seguimiento, adquisiciones y financiero... que el especialista legal tambien pueda retroalimentar"</div>
+    <div class="voice-quote">"Y en el informe final, para ver si se logro o no se logro el objetivo general del proyecto" - Deseo de vision 360</div>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--desire-orange);"><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Arthur Gerffson Dos Santos - Brasil (Analista Ops.)</h4>
+    <div class="voice-quote">"Si nosotros tenemos como una vision macro en que yo pueda clicar un producto, una autopista, una carretera... y ahi yo veo como esta alineada con el todo de la operacion. Seria un sueno increible."</div>
+    <div class="voice-quote">"Mi trabajo se esta contribuyendo para que una carretera funcione en mi ciudad" - Deseo de ver el impacto real de su trabajo</div>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--bid-cyan);"><img src="https://flagcdn.com/w20/py.png" class="flag-img" alt="Paraguay"> Diana Ovelar - Paraguay (Adquisiciones, desde 2021)</h4>
+    <div class="voice-quote">"Estuve ya en varios otros proyectos antes. Utilizando CEPA, despues OVP y luego migramos al portal del cliente" - Experiencia con toda la evolucion del sistema</div>
+    <div class="voice-quote">"Eso es lo que para mi ahora mismo me hace ruido" - Sobre datos presupuestarios que no encajan</div>
+  </div>
+
+  <div class="detail-card">
+    <h4 style="color: var(--bid-cyan);"><img src="https://flagcdn.com/w20/br.png" class="flag-img" alt="Brasil"> Gabriela Couto De Araujo - Brasil (Analista Ops.)</h4>
+    <div class="voice-quote">"El concepto de camino critico que utilizamos en proyectos es que siempre vas a tener uno o dos productos que son clave para llegar a esos resultados" - Deseo de ruta critica en el portal</div>
+    <div class="voice-quote">"Estos caminos tenemos que dejar como cerrado para que no sea cambiado, pero las otras acciones pueden cambiar" - Logica de gestion que el portal no captura</div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MAPA DE PRIORIDADES -->
+<!-- ============================================== -->
+<h2 class="section-title">Mapa de Prioridades de Mejora</h2>
+<p class="section-subtitle">22 recomendaciones ordenadas por impacto y urgencia</p>
+
+<div class="detail-card" style="margin: 20px 0;">
+  <svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+    <!-- Axes -->
+    <line x1="80" y1="460" x2="880" y2="460" stroke="#90A4AE" stroke-width="2"/>
+    <line x1="80" y1="460" x2="80" y2="20" stroke="#90A4AE" stroke-width="2"/>
+    <text x="480" y="495" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="600">ESFUERZO DE IMPLEMENTACION &rarr;</text>
+    <text x="20" y="240" text-anchor="middle" font-size="14" fill="var(--text)" font-weight="600" transform="rotate(-90, 20, 240)">IMPACTO EN USUARIO &uarr;</text>
+
+    <!-- Quadrant labels -->
+    <rect x="85" y="25" width="380" height="210" fill="#E8F5E9" opacity="0.3" rx="8"/>
+    <text x="275" y="50" text-anchor="middle" font-size="12" fill="#2E7D32" font-weight="700">QUICK WINS - Hacer YA</text>
+
+    <rect x="475" y="25" width="400" height="210" fill="#FFF3E0" opacity="0.3" rx="8"/>
+    <text x="675" y="50" text-anchor="middle" font-size="12" fill="#E65100" font-weight="700">PROYECTOS ESTRATEGICOS</text>
+
+    <rect x="85" y="245" width="380" height="210" fill="#E3F2FD" opacity="0.3" rx="8"/>
+    <text x="275" y="270" text-anchor="middle" font-size="12" fill="#1565C0" font-weight="700">MEJORAS INCREMENTALES</text>
+
+    <rect x="475" y="245" width="400" height="210" fill="#ECEFF1" opacity="0.3" rx="8"/>
+    <text x="675" y="270" text-anchor="middle" font-size="12" fill="#546E7A" font-weight="700">BACKLOG FUTURO</text>
+
+    <!-- Quick Wins -->
+    <circle cx="180" cy="80" r="22" fill="#E53935" opacity="0.9"/><text x="180" y="85" text-anchor="middle" font-size="10" fill="white" font-weight="700">R10</text>
+    <text x="180" y="115" text-anchor="middle" font-size="9" fill="var(--text)">Autoguardado</text>
+
+    <circle cx="280" cy="100" r="20" fill="#E53935" opacity="0.9"/><text x="280" y="105" text-anchor="middle" font-size="10" fill="white" font-weight="700">R11</text>
+    <text x="280" y="132" text-anchor="middle" font-size="9" fill="var(--text)">Contador chars</text>
+
+    <circle cx="150" cy="150" r="18" fill="#FF8F00" opacity="0.9"/><text x="150" y="155" text-anchor="middle" font-size="10" fill="white" font-weight="700">R3</text>
+    <text x="150" y="180" text-anchor="middle" font-size="9" fill="var(--text)">Fix pildoras</text>
+
+    <circle cx="350" cy="90" r="20" fill="#E53935" opacity="0.9"/><text x="350" y="95" text-anchor="middle" font-size="10" fill="white" font-weight="700">R6</text>
+    <text x="350" y="122" text-anchor="middle" font-size="9" fill="var(--text)">Loading states</text>
+
+    <circle cx="250" cy="160" r="16" fill="#FF8F00" opacity="0.9"/><text x="250" y="165" text-anchor="middle" font-size="10" fill="white" font-weight="700">R5</text>
+    <text x="250" y="188" text-anchor="middle" font-size="9" fill="var(--text)">Filled buttons</text>
+
+    <circle cx="420" cy="130" r="18" fill="#E53935" opacity="0.9"/><text x="420" y="135" text-anchor="middle" font-size="10" fill="white" font-weight="700">R2</text>
+    <text x="420" y="160" text-anchor="middle" font-size="9" fill="var(--text)">Alerta sesion</text>
+
+    <!-- Strategic Projects -->
+    <circle cx="550" cy="70" r="24" fill="#B71C1C" opacity="0.9"/><text x="550" y="75" text-anchor="middle" font-size="10" fill="white" font-weight="700">R20</text>
+    <text x="550" y="108" text-anchor="middle" font-size="9" fill="var(--text)">Stepper validacion</text>
+
+    <circle cx="680" cy="90" r="22" fill="#E53935" opacity="0.9"/><text x="680" y="95" text-anchor="middle" font-size="10" fill="white" font-weight="700">R9</text>
+    <text x="680" y="124" text-anchor="middle" font-size="9" fill="var(--text)">Sticky columns</text>
+
+    <circle cx="600" cy="150" r="20" fill="#FF8F00" opacity="0.9"/><text x="600" y="155" text-anchor="middle" font-size="10" fill="white" font-weight="700">R14</text>
+    <text x="600" y="182" text-anchor="middle" font-size="9" fill="var(--text)">Crear riesgos</text>
+
+    <circle cx="780" cy="110" r="20" fill="#FF8F00" opacity="0.9"/><text x="780" y="115" text-anchor="middle" font-size="10" fill="white" font-weight="700">R13</text>
+    <text x="780" y="142" text-anchor="middle" font-size="9" fill="var(--text)">Carga masiva</text>
+
+    <circle cx="750" cy="180" r="18" fill="#0090D9" opacity="0.9"/><text x="750" y="185" text-anchor="middle" font-size="10" fill="white" font-weight="700">R8</text>
+    <text x="750" y="210" text-anchor="middle" font-size="9" fill="var(--text)">Migrar notas</text>
+
+    <!-- Incremental -->
+    <circle cx="180" cy="310" r="16" fill="#43A047" opacity="0.8"/><text x="180" y="315" text-anchor="middle" font-size="10" fill="white" font-weight="700">R7</text>
+    <text x="180" y="338" text-anchor="middle" font-size="9" fill="var(--text)">Notas aclaratoria</text>
+
+    <circle cx="300" cy="340" r="16" fill="#43A047" opacity="0.8"/><text x="300" y="345" text-anchor="middle" font-size="10" fill="white" font-weight="700">R15</text>
+    <text x="300" y="368" text-anchor="middle" font-size="9" fill="var(--text)">Jerarquia visual</text>
+
+    <circle cx="200" cy="390" r="14" fill="#0090D9" opacity="0.8"/><text x="200" y="395" text-anchor="middle" font-size="10" fill="white" font-weight="700">R19</text>
+    <text x="200" y="418" text-anchor="middle" font-size="9" fill="var(--text)">Guia enlaces</text>
+
+    <circle cx="400" cy="300" r="16" fill="#43A047" opacity="0.8"/><text x="400" y="305" text-anchor="middle" font-size="10" fill="white" font-weight="700">R4</text>
+    <text x="400" y="328" text-anchor="middle" font-size="9" fill="var(--text)">Btn SAR dashboard</text>
+
+    <!-- Backlog -->
+    <circle cx="580" cy="320" r="16" fill="#78909C" opacity="0.7"/><text x="580" y="325" text-anchor="middle" font-size="10" fill="white" font-weight="700">R18</text>
+    <text x="580" y="348" text-anchor="middle" font-size="9" fill="var(--text)">Upload archivos</text>
+
+    <circle cx="700" cy="350" r="16" fill="#78909C" opacity="0.7"/><text x="700" y="355" text-anchor="middle" font-size="10" fill="white" font-weight="700">R22</text>
+    <text x="700" y="378" text-anchor="middle" font-size="9" fill="var(--text)">Reporte ejecutivo</text>
+
+    <circle cx="800" cy="300" r="16" fill="#78909C" opacity="0.7"/><text x="800" y="305" text-anchor="middle" font-size="10" fill="white" font-weight="700">R16</text>
+    <text x="800" y="328" text-anchor="middle" font-size="9" fill="var(--text)">IA como borrador</text>
+  </svg>
+</div>
+
+<!-- ============================================== -->
+<!-- TABLA RESUMEN DE RECOMENDACIONES -->
+<!-- ============================================== -->
+<h2 class="section-title">Tabla Resumen de Recomendaciones</h2>
+
+<!-- QUICK WINS -->
+<h3 style="color: var(--success-green); margin: 20px 0 10px; font-size: 18px;">Quick Wins  -  Implementacion inmediata (bajo esfuerzo, alto impacto)</h3>
+<div class="journey-container">
+<table class="journey-table" style="min-width: 900px;">
+<thead>
+<tr>
+  <th style="width:50px;">#</th>
+  <th style="width:180px;">Recomendacion</th>
+  <th>Pantalla</th>
+  <th style="width:70px;">Severidad</th>
+  <th>KPI Esperado</th>
+  <th style="width:120px;">Estado</th>
+  <th style="width:100px;">Vista Propuesta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="severity-critical"><td>R1</td><td><strong>Spinner durante redireccion B2C</strong></td><td>app.component</td><td><span class="desire-tag">BAJA</span></td><td>Reducir percepcion de "pantalla rota"</td><td><span class="status-tag status-implemented">IMPLEMENTADO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-652" target="_blank">CLIEN-652</a> - Ready for UAT</span></td><td>-</td></tr>
+<tr class="severity-critical"><td>R2</td><td><strong>Alerta "Sesion por expirar"</strong></td><td>interceptor HTTP</td><td><span class="pain-tag">CRITICA</span></td><td>Prevenir Error 401 silencioso</td><td><span class="status-tag status-partial">PARCIAL</span></td><td><a class="view-link" onclick="openModal('modal-r2')">Ver solucion</a></td></tr>
+<tr class="severity-high"><td>R3</td><td><strong>Fix pildoras enganosas</strong></td><td>project-card</td><td><span class="desire-tag">MEDIA</span></td><td>-20% dead clicks</td><td><span class="status-tag status-pending">PENDIENTE</span></td><td><a class="view-link" onclick="openModal('modal-r3')">Ver solucion</a></td></tr>
+<tr class="severity-high"><td>R5</td><td><strong>Botones Filled para accion primaria</strong></td><td>tasks tabs</td><td><span class="desire-tag">MEDIA</span></td><td>Reducir indecision</td><td><span class="status-tag status-pending">PENDIENTE</span></td><td><a class="view-link" onclick="openModal('modal-r5')">Ver solucion</a></td></tr>
+<tr class="severity-high"><td>R6</td><td><strong>Loading states reales</strong></td><td>tasks, card-body</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar "No hay info" falso</td><td><span class="status-tag status-dev">EN PROCESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-652" target="_blank">CLIEN-652</a> - En validacion UAT</span></td><td><a class="view-link" onclick="openModal('modal-r6')">Ver solucion</a></td></tr>
+<tr class="severity-critical"><td>R10</td><td><strong>Autoguardado cada 30 seg</strong></td><td>Todas SAR</td><td><span class="pain-tag">CRITICA</span></td><td>Eliminar perdida datos</td><td><span class="status-tag status-pending">PENDIENTE</span></td><td><a class="view-link" onclick="openModal('modal-r10')">Ver solucion</a></td></tr>
+<tr class="severity-critical"><td>R11</td><td><strong>Contador de caracteres dinamico</strong></td><td>campos texto SAR</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar incertidumbre limites</td><td><span class="status-tag status-implemented">IMPLEMENTADO</span></td><td>-</td></tr>
+<tr class="severity-medium"><td>R12</td><td><strong>Ampliar limite a 4000 chars</strong></td><td>text-area-field</td><td><span class="desire-tag">MEDIA</span></td><td>Satisfacer 8+ usuarios</td><td><span class="status-tag status-implemented">IMPLEMENTADO</span></td><td>-</td></tr>
+<tr class="severity-high"><td>R21</td><td><strong>Confirmacion post-envio</strong></td><td>send-report</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar incertidumbre</td><td><span class="status-tag status-implemented">IMPLEMENTADO</span></td><td>-</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- REQUIERE ANALISIS -->
+<h3 style="color: var(--desire-orange); margin: 30px 0 10px; font-size: 18px;">Requiere Analisis  -  Mejoras estrategicas (mayor esfuerzo, impacto estructural)</h3>
+<div class="journey-container">
+<table class="journey-table" style="min-width: 900px;">
+<thead>
+<tr>
+  <th style="width:50px;">#</th>
+  <th style="width:200px;">Recomendacion</th>
+  <th>Pantalla/Componente</th>
+  <th style="width:80px;">Severidad</th>
+  <th>KPI Esperado</th>
+  <th style="width:140px;">Estado en Codigo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="severity-medium"><td>R4</td><td><strong>Boton SAR en dashboard</strong></td><td>home / project-card</td><td><span class="desire-tag">MEDIA</span></td><td>Acceso directo sin navegar por correos</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R7</td><td><strong>Notas aclaratorias en info gral</strong></td><td>card-body[GENERAL_INFORMATION]</td><td><span class="desire-tag">MEDIA</span></td><td>Reducir frustracion por datos no editables</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-medium"><td>R8</td><td><strong>Migrar notas de informe anterior</strong></td><td>card-body sections</td><td><span class="desire-tag">MEDIA</span></td><td>Reducir tiempo de llenado repetitivo</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-medium"><td>R8b</td><td><strong>Panel lateral en vez de modal fullscreen</strong></td><td>card-body (sub-secciones 1.1-1.9)</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar oclusion de sidebar</td><td><span class="status-tag status-none">SIN PROGRESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1100" target="_blank">CLIEN-1100</a> - Ready for Analysis</span></td></tr>
+<tr class="severity-medium"><td>R8c</td><td><strong>Navegacion Anterior/Siguiente en modal</strong></td><td>card-body (sub-secciones 1.1-1.9)</td><td><span class="desire-tag">MEDIA</span></td><td>Recorrer sub-secciones sin cerrar/reabrir</td><td><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-557" target="_blank">CLIEN-557</a></span></td></tr>
+<tr class="severity-medium"><td>R8d</td><td><strong>Breadcrumb/indicador de posicion en modal</strong></td><td>card-body (sub-secciones 1.1-1.9)</td><td><span class="desire-tag">MEDIA</span></td><td>Orientacion dentro de las 9 sub-secciones</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-high"><td>R9</td><td><strong>Sticky columns en matriz</strong></td><td>results-matrix-table</td><td><span class="pain-tag">ALTA</span></td><td>Time-on-task de 81 min a &lt;25 min</td><td><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-733" target="_blank">CLIEN-733</a></span></td></tr>
+<tr class="severity-medium"><td>R13</td><td><strong>Carga masiva Excel/CSV</strong></td><td>results-matrix-table</td><td><span class="pain-tag">ALTA</span></td><td>"Especialistas, no digitadores"</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-high"><td>R14</td><td><strong>Crear riesgos nuevos en SAR</strong></td><td>risk-matrix-semi-annual-report</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar workaround de riesgos vencidos</td><td><span class="status-tag status-dev">EN PROCESO</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1103" target="_blank">CLIEN-1103</a></span></td></tr>
+<tr><td>R15</td><td><strong>Jerarquia visual riesgos</strong></td><td>risk-matrix-report</td><td><span class="desire-tag">MEDIA</span></td><td>Botones accion > etiquetas estado</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R16</td><td><strong>IA como borrador sugerido</strong></td><td>lessons-learned</td><td><span class="desire-tag">MEDIA</span></td><td>Equilibrar innovacion + autonomia</td><td><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-920" target="_blank">CLIEN-920</a></span></td></tr>
+<tr><td>R17</td><td><strong>Boton "Auto-resumen IA" opcional</strong></td><td>lessons-learned</td><td><span class="desire-tag">BAJA</span></td><td>Mejorar percepcion de control</td><td><span class="status-tag status-implemented">FINALIZADA</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-920" target="_blank">CLIEN-920</a></span></td></tr>
+<tr><td>R18</td><td><strong>Upload archivos directos</strong></td><td>annex-links</td><td><span class="desire-tag">MEDIA</span></td><td>Eliminar dependencia de enlaces externos</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R19</td><td><strong>Guia para compartir enlaces</strong></td><td>annex-links</td><td><span class="desire-tag">BAJA</span></td><td>Reducir errores de permisos</td><td><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-524" target="_blank">CLIEN-524</a></span></td></tr>
+<tr class="severity-critical"><td>R20</td><td><strong>Stepper de validacion en envio</strong></td><td>send-report.component</td><td><span class="pain-tag">CRITICA</span></td><td>-30% tickets soporte "boton vacio"</td><td><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-555" target="_blank">CLIEN-555</a> / <a href="https://iadb-ttd.atlassian.net/browse/CLIEN-557" target="_blank">CLIEN-557</a> - Bugs activos</span></td></tr>
+<tr><td>R22</td><td><strong>Reporte ejecutivo 1-clic</strong></td><td>send-report (post-envio)</td><td><span class="desire-tag">MEDIA</span></td><td>Potenciar valor politico del portal</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R23</td><td><strong>Perfiles estandar con herencia de permisos</strong></td><td>Login / aprovisionamiento</td><td><span class="desire-tag">MEDIA</span></td><td>Eliminar dependencia de formulario Salesforce</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R24</td><td><strong>Gestion multi-operacion</strong></td><td>tasks / seleccion operacion</td><td><span class="desire-tag">MEDIA</span></td><td>Informes consolidados o referencia cruzada</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R25</td><td><strong>Edicion controlada de campos bloqueados</strong></td><td>card-body (Info General 1.1-1.9)</td><td><span class="pain-tag">ALTA</span></td><td>Registro de cambios + validacion BID</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-medium"><td>R26</td><td><strong>Indicadores analiticos avanzados</strong></td><td>results-matrix-table</td><td><span class="desire-tag">MEDIA</span></td><td>Valor ganado, proyecciones, alertas inconsistencias</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R27</td><td><strong>Traduccion automatica editable</strong></td><td>risk-matrix-report</td><td><span class="desire-tag">MEDIA</span></td><td>Riesgos en ingles comprensibles por equipos locales</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R28</td><td><strong>Riesgos operativos de ultima milla</strong></td><td>risk-matrix-semi-annual-report</td><td><span class="desire-tag">MEDIA</span></td><td>Subcategoria de cierre editable por ejecutor</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr><td>R29</td><td><strong>Descarga masiva ZIP + previsualizacion</strong></td><td>annex-links</td><td><span class="desire-tag">BAJA</span></td><td>Acceso rapido a todos los anexos (equipo BID)</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+<tr class="severity-high"><td>R30</td><td><strong>Integracion SAR-Convergencia bidireccional</strong></td><td>Transversal (todas las secciones)</td><td><span class="pain-tag">ALTA</span></td><td>Eliminar doble carga, SAR como fuente primaria</td><td><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail"><a href="https://iadb-ttd.atlassian.net/browse/CLIEN-1497" target="_blank">CLIEN-1497</a> - Solo consume datos</span></td></tr>
+<tr class="severity-medium"><td>R31</td><td><strong>Observaciones del Banco dentro del sistema</strong></td><td>send-report (post-envio)</td><td><span class="pain-tag">ALTA</span></td><td>Trazabilidad digital de devolucion y rectificacion</td><td><span class="status-tag status-partial">PARCIAL</span><span class="ticket-detail">dialog-comments existe, adaptable</span></td></tr>
+<tr><td>R32</td><td><strong>Feedback regional permanente</strong></td><td>Transversal</td><td><span class="desire-tag">MEDIA</span></td><td>Mecanismo integrado al ciclo de desarrollo</td><td><span class="status-tag status-pending">PENDIENTE</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ============================================== -->
+<!-- PROPUESTAS DE MEJORA FAQ                       -->
+<!-- ============================================== -->
+<h2 class="section-title">Ejes Tematicos de Mejora</h2>
+<p style="color: var(--text-light); margin-bottom: 20px; font-size: 14px;">
+  Fuente: Documento interno "FAQ y Mejoras SAR 2026". Las 8 propuestas de mejora han sido integradas como deseos en las columnas correspondientes del Journey Map (marcadas como "Propuesta FAQ"). A continuacion, el resumen por eje tematico.
+</p>
+
+<div class="detail-card" style="border-left: 4px solid var(--bid-cyan); margin-bottom: 30px;">
+  <h4 style="color: var(--bid-blue); margin-bottom: 12px;">9 Ejes Tematicos Consolidados</h4>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 12px;">
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">A. Integracion y datos</strong><br>
+      Integracion SAR&#8596;Convergencia bidireccional. Eliminacion de doble carga. SAR como fuente primaria.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R30 | Journey Map: col. 9</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">B. Retroalimentacion</strong><br>
+      Observaciones y devolucion dentro del sistema. Registro formal de rectificaciones. Riesgos historicos separados.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R31 | Journey Map: col. 9</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">C. Analisis y calidad</strong><br>
+      Indicadores analiticos avanzados (valor ganado, proyecciones). Alertas por inconsistencias fisico/financieras.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R26 | Journey Map: col. 5</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">D. Flexibilidad operativa</strong><br>
+      Ajustes historicos con trazabilidad. Apertura anticipada segun fecha contractual. Criterio unificado para Startup Plan.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R25 | Journey Map: col. 4</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">E. Riesgos</strong><br>
+      Creacion directa de nuevos riesgos. Inclusion de riesgos operativos de "ultima milla".
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R14, R28 | Journey Map: col. 6</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">F. Anexos</strong><br>
+      Descarga masiva ZIP. Previsualizacion. Carga directa de documentos (no solo enlaces).
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R18, R29 | Journey Map: col. 8</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">G. Usuarios y permisos</strong><br>
+      Gestion agil de accesos. Multi-operacion simultanea. Claridad "procesos" vs "contratos".
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R23, R24 | Journey Map: col. 1, col. 3</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">H. Comunicacion</strong><br>
+      Coherencia linguistica (traduccion automatica editable). Reglas claras sobre ciclo y periodos.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R27 | Journey Map: col. 6</span>
+    </div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;">
+      <strong style="color: var(--bid-blue);">I. Mejora continua</strong><br>
+      Mecanismo permanente de feedback regional integrado al ciclo de desarrollo.
+      <br><span style="font-size:10px; color:var(--text-light);">&#8594; R32 | Journey Map: col. 9</span>
+    </div>
+  </div>
+</div>
+
+
+<div class="detail-card" style="border-left: 4px solid var(--bid-blue); margin: 20px 0;">
+  <h4 style="color: var(--bid-blue); margin-bottom: 12px;">Patrones de comportamiento - resumen</h4>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; font-size: 12px;">
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Workarounds</strong><br>Cuando el portal no explica o bloquea, los equipos resuelven por correo, tickets o apoyo informal.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Excel como refugio</strong><br>Preparan, validan y comparan fuera del portal porque temen perder trabajo o no poder exportar.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Soporte paralelo</strong><br>WhatsApp, correo y reuniones compensan la falta de trazabilidad dentro del flujo.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Miedo a perder avances</strong><br>El Error 401, los loaders y la falta de autoguardado elevan la ansiedad en tareas largas.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Ensayo y error</strong><br>Muchas funciones se descubren por accidente, no por senalizacion clara del sistema.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Vision macro</strong><br>Los usuarios necesitan entender avance, pendientes y responsables sin entrar seccion por seccion.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Lenguaje mixto</strong><br>La mezcla de terminos tecnicos, ingles y espanol reduce confianza y comprension.</div>
+    <div style="background: var(--bid-light); padding: 10px; border-radius: 6px;"><strong>Acceso condicionado</strong><br>La dependencia de laptop, permisos y enlaces limita el uso en campo o en cierres urgentes.</div>
+  </div>
+</div>
+
+<div class="detail-card" style="border-left: 4px solid var(--desire-orange); margin: 20px 0 30px;">
+  <h4 style="color: var(--desire-orange); margin-bottom: 12px;">Caracterizacion de usuarios - resumen</h4>
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; font-size: 12px;">
+    <div style="background: #FFF3E0; padding: 10px; border-radius: 6px;"><strong>Especialista veterano</strong><br>Domina el proceso, pero siente que el portal lo convierte en digitador.</div>
+    <div style="background: #FFF3E0; padding: 10px; border-radius: 6px;"><strong>Analista estrategica</strong><br>Busca trazabilidad, calidad de datos y decisiones claras, no solo completar campos.</div>
+    <div style="background: #FFF3E0; padding: 10px; border-radius: 6px;"><strong>Gestor pragmatico</strong><br>Necesita botones visibles, instrucciones en contexto y menos dependencia de soporte.</div>
+    <div style="background: #FFF3E0; padding: 10px; border-radius: 6px;"><strong>Ejecutora regional</strong><br>Trabaja con conectividad variable, roles compartidos y alta presion de cierre.</div>
+    <div style="background: #FFF3E0; padding: 10px; border-radius: 6px;"><strong>Power user</strong><br>Valora el portal, pero espera eficiencia similar a herramientas modernas.</div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- CONCLUSION -->
+<!-- ============================================== -->
+<h2 class="section-title">Conclusion Estrategica</h2>
+
+<div class="detail-card" style="border-left: 4px solid var(--bid-blue); margin: 20px 0;">
+  <h4 style="color: var(--bid-blue); margin-bottom: 12px;">Los 3 Puntos Criticos del Flujo SAR</h4>
+
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+    <div style="background: #FFEBEE; padding: 16px; border-radius: 8px;">
+      <h5 style="color: #B71C1C;">1. Zona de mayor friccion</h5>
+      <p style="font-size: 13px;">Pantalla: <strong>Matriz de Resultados</strong></p>
+      <p style="font-size: 12px; color: var(--text-light);">Sesiones de +1 hora, doble ventana, miedo al Error 401. Especialistas de alto nivel "convertidos en digitadores". Convergencia de los 5 dolores mas severos: error silencioso, doble scroll, zona editable invisible, limite de caracteres y falta de autoguardado.</p>
+      <p style="font-size: 12px; margin-top: 8px;"><strong>Accion inmediata:</strong> Autoguardado + Sticky Columns + Contador de caracteres</p>
+    </div>
+    <div style="background: #FFEBEE; padding: 16px; border-radius: 8px;">
+      <h5 style="color: #B71C1C;">2. Bloqueo de envio</h5>
+      <p style="font-size: 13px;">Pantalla: <strong>Envio del Informe</strong></p>
+      <p style="font-size: 12px; color: var(--text-light);">El boton de envio no aparece sin explicar que secciones faltan por completar. Principal causa de tickets de soporte y abandono del flujo. El usuario completa todo el trabajo pero no puede culminar el proceso.</p>
+      <p style="font-size: 12px; margin-top: 8px;"><strong>Accion inmediata:</strong> Stepper de validacion con enlaces directos a secciones incompletas</p>
+    </div>
+    <div style="background: #E8EAF6; padding: 16px; border-radius: 8px;">
+      <h5 style="color: #283593;">3. Confusion entre automatizacion y control</h5>
+      <p style="font-size: 13px;">Pantalla: <strong>Lecciones Aprendidas</strong></p>
+      <p style="font-size: 12px; color: var(--text-light);">La IA genera texto automaticamente, pero el ejecutor quiere que sea un "borrador sugerido" editable, no un reemplazo de su analisis profesional. La carga de 4 preguntas obligatorias por leccion agrava la percepcion de rigidez.</p>
+      <p style="font-size: 12px; margin-top: 8px;"><strong>Accion estrategica:</strong> Posicionar la IA como coautoria opcional, no como flujo obligatorio</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px; padding: 16px; background: var(--success-light); border-radius: 8px;">
+    <h5 style="color: var(--success-green);">Lo que SI funciona y debemos proteger</h5>
+    <ul style="font-size: 13px; margin-left: 20px; color: var(--text);">
+      <li><strong>88% satisfaccion positiva</strong>  -  la base de usuarios acepta y valora el portal</li>
+      <li><strong>Trazabilidad y unificacion</strong>  -  "Mucho mejor que el STEP del Banco Mundial" (NPS 9, El Salvador)</li>
+      <li><strong>Reduccion del ciclo de datos</strong>  -  de 90 dias (analogico) a 25 dias promedio</li>
+      <li><strong>Eliminacion del Excel</strong>  -  "Portal intuitivo que busca consolidar toda la informacion" (NPS 10, Brasil)</li>
+      <li><strong>Power Users leales</strong>  -  multiples NPS 10 de AR, BR, EC, HO, PN, PE</li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 20px; padding: 20px; background: var(--bid-light); border-radius: 8px; font-size: 16px; font-weight: 600; color: var(--bid-blue); text-align: center; line-height: 1.6;">
+    El objetivo no es redisenar el portal. Es resolver 6 fricciones criticas para que el 88% de satisfaccion se convierta en 95% y el Time-to-Data baje de 25 a menos de 10 dias.
+  </p>
+</div>
+
+</div><!-- end container -->
+
+<div class="footer">
+  <p>Journey Map - Informe Semestral de Progreso (SAR) | Portal del Cliente BID</p>
+  <p>Generado: Abril 2026 | Fuentes: 12 Entrevistas + 295 Encuestas CSAT + 306 NPS + Datadog + Blueprint Tecnico + FAQ SAR</p>
+  <p>Aplicacion: Angular 18 | client-portal-frontend v1.2.1 | Componentes: semi-annual-report/*</p>
+</div>
+
+<!-- ============================================== -->
+<!-- MODALES DE VISTA PROPUESTA (Quick Wins)        -->
+<!-- Basados en la UI real del portal: Angular 18,  -->
+<!-- Kendo UI, tema .theme--fi, colores #004e70,    -->
+<!-- #0089b5, cards con box-shadow: 0px 3px 6px,    -->
+<!-- status-label con border-radius: 10px           -->
+<!-- ============================================== -->
+
+<!-- R2: Alerta Sesion -->
+<div class="modal-overlay" id="modal-r2">
+  <div class="modal-content">
+    <div class="modal-header" style="background:#004e70;">
+      <h3>R2  -  Alerta "Sesion por expirar"</h3>
+      <button class="modal-close" onclick="closeModal('modal-r2')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;"><strong>Problema:</strong> <code>app.component.ts</code> tiene <code>INACTIVITY_TIMEOUT = 180 min</code> y ejecuta <code>this.msal.logout()</code> sin previo aviso. El usuario pierde todo el trabajo del SAR.</p>
+
+      <div class="mockup-box mockup-before">
+        <div class="mockup-label">Vista real actual  -  <code>loader-spinner.component</code> seguido de Error 401</div>
+        <!-- Replica real del overlay del portal -->
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:40px;text-align:center;">
+          <div style="width:50px;height:50px;border:4px solid #e0e0e0;border-top:4px solid #004e70;border-radius:50%;margin:0 auto 16px;"></div>
+          <p style="font-weight:bold;font-size:18px;color:#000;">Cargando...</p>
+          <div style="margin-top:20px;padding:12px;background:#FFEBEE;border-radius:4px;">
+            <span style="color:#B71C1C;font-weight:600;font-size:14px;">Error 401  -  Unauthorized</span>
+            <p style="font-size:11px;color:#78909C;margin-top:4px;">La sesion ha expirado. Redirigiendo a login...</p>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#B71C1C;margin-top:6px;">Archivo: <code>app.component.ts:312-317</code>  -  logout silencioso sin dialogo previo</p>
+      </div>
+
+      <div class="mockup-box mockup-after">
+        <div class="mockup-label">Solucion propuesta  -  Material Dialog antes del logout</div>
+        <!-- Replica el estilo de ConfirmCancelDialogComponent que ya existe -->
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;">
+          <!-- Barra superior del portal -->
+          <div style="background:#004e70;height:4px;border-radius:4.5px 4.5px 0 0;"></div>
+          <div style="padding:24px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+              <div style="width:44px;height:44px;background:#FFF3E0;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:22px;">&#9888;</span>
+              </div>
+              <div>
+                <div style="font-size:16px;font-weight:700;color:#080707;">Su sesion expira en 5 minutos</div>
+                <div style="font-size:13px;color:#78909C;margin-top:2px;">Los cambios no guardados se perderan si no continua.</div>
+              </div>
+            </div>
+            <!-- Barra de progreso tipo Kendo -->
+            <div style="height:4px;background:#e0e0e0;border-radius:2px;margin:16px 0;">
+              <div style="height:4px;background:#E38A05;border-radius:2px;width:35%;"></div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+              <button style="padding:8px 20px;border:1px solid #e0e0e0;border-radius:4px;background:white;cursor:pointer;font-size:13px;color:#080707;font-family:'Segoe UI',sans-serif;">Cerrar sesion</button>
+              <button style="padding:8px 20px;border:none;border-radius:4px;background:#004e70;color:white;cursor:pointer;font-size:13px;font-weight:600;font-family:'Segoe UI',sans-serif;">Continuar trabajando</button>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#2E7D32;margin-top:8px;"><strong>Implementacion:</strong> Reusar <code>ConfirmCancelDialogComponent</code> existente. Disparar a los 175 min via <code>setTimeout</code> en <code>app.component.ts</code>. Si hace clic en "Continuar", resetear <code>logoutTimer</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- R3: Fix pildoras -->
+<div class="modal-overlay" id="modal-r3">
+  <div class="modal-content">
+    <div class="modal-header" style="background:#004e70;">
+      <h3>R3  -  Fix pildoras enganosas en Dashboard</h3>
+      <button class="modal-close" onclick="closeModal('modal-r3')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;"><strong>Problema:</strong> <code>status-label.component</code> usa <code>border-radius: 10px</code> con colores solidos, identico a los botones de Kendo. Genera dead clicks en Datadog.</p>
+
+      <div class="mockup-box mockup-before">
+        <div class="mockup-label">Vista real actual  -  <code>_component__status-label.scss</code></div>
+        <!-- Replica EXACTA del CSS real: border-radius:10px, padding:2px 8px, bg colors -->
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:18px 16px;">
+          <div style="font-weight:bold;font-size:20px;color:#080707;margin-bottom:12px;">Proyectos en ejecucion</div>
+          <!-- kendo-card replica -->
+          <div style="border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <span style="font-size:12px;color:#78909C;">Numero de prestamo</span>
+                <div style="font-size:18px;color:#080707;">5000/OC-DR &gt; DR-L1234</div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <!-- Status labels REALES con los colores del SCSS -->
+                <p style="text-align:center;padding:2px 8px;border-radius:10px;color:#fff;background:#5495db;margin:0;font-size:12px;cursor:pointer;">Monitoreo</p>
+                <p style="text-align:center;padding:2px 8px;border-radius:10px;color:#fff;background:#ebb254;margin:0;font-size:12px;cursor:pointer;">Pendiente</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:24px;margin-top:12px;font-size:12px;">
+              <div><span style="color:#78909C;">Ejecutor</span><br><strong>Min. de Educacion</strong></div>
+              <div><span style="color:#78909C;">Monto aprobado</span><br><strong>15,000,000.00</strong></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#B71C1C;margin-top:6px;">Las pildoras <code>.c-status-label__blue</code> y <code>__yellow</code> parecen botones por su <code>border-radius:10px</code> y colores saturados</p>
+      </div>
+
+      <div class="mockup-box mockup-after">
+        <div class="mockup-label">Solucion propuesta  -  misma estructura, CSS diferenciado</div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:18px 16px;">
+          <div style="font-weight:bold;font-size:20px;color:#080707;margin-bottom:12px;">Proyectos en ejecucion</div>
+          <div style="border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <span style="font-size:12px;color:#78909C;">Numero de prestamo</span>
+                <div style="font-size:18px;color:#080707;">5000/OC-DR &gt; DR-L1234</div>
+              </div>
+              <div style="display:flex;gap:6px;">
+                <!-- Status labels CORREGIDOS: sin cursor:pointer, border-radius:4px, colores suaves -->
+                <p style="text-align:center;padding:2px 8px;border-radius:4px;color:#1565C0;background:#E3F2FD;margin:0;font-size:11px;cursor:default;border:1px solid #BBDEFB;font-weight:500;">Monitoreo</p>
+                <p style="text-align:center;padding:2px 8px;border-radius:4px;color:#E65100;background:#FFF3E0;margin:0;font-size:11px;cursor:default;border:1px solid #FFE0B2;font-weight:500;">Pendiente</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:24px;margin-top:12px;font-size:12px;">
+              <div><span style="color:#78909C;">Ejecutor</span><br><strong>Min. de Educacion</strong></div>
+              <div><span style="color:#78909C;">Monto aprobado</span><br><strong>15,000,000.00</strong></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#2E7D32;margin-top:6px;"><strong>Cambio CSS:</strong> En <code>_component__status-label.scss</code> cambiar <code>border-radius: 10px</code> a <code>4px</code>, color de fondo suave en vez de saturado, agregar <code>cursor: default</code>, quitar hover effects.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- R5: Botones Filled -->
+<div class="modal-overlay" id="modal-r5">
+  <div class="modal-content">
+    <div class="modal-header" style="background:#004e70;">
+      <h3>R5  -  Botones Filled para accion primaria en Tareas</h3>
+      <button class="modal-close" onclick="closeModal('modal-r5')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;"><strong>Problema:</strong> El <code>kendo-tabstrip</code> en <code>task-tab.component</code> muestra pestanas identicas "Tareas" y "Comentarios". En la pantalla de actividades, no hay distincion visual entre "Operacion" e "Informe Semestral".</p>
+
+      <div class="mockup-box mockup-before">
+        <div class="mockup-label">Vista real actual  -  <code>activities.component.html</code></div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:24px 16px;">
+          <!-- Header real del dashboard -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="height:32px;width:32px;display:flex;justify-content:center;align-items:center;border-radius:4px;color:white;background:#2fbfce;font-size:18px;">&#9776;</div>
+            <span style="font-size:20px;color:#080707;">Actividades</span>
+          </div>
+          <!-- Tabs Kendo reales - ambas identicas -->
+          <div style="display:flex;border-bottom:2px solid #e0e0e0;">
+            <div style="padding:10px 20px;font-size:14px;color:#080707;border-bottom:2px solid #0089b5;margin-bottom:-2px;cursor:pointer;">Operacion</div>
+            <div style="padding:10px 20px;font-size:14px;color:#78909C;cursor:pointer;">Informe Semestral</div>
+          </div>
+          <div style="padding:20px;text-align:center;color:#78909C;font-size:13px;border:1px solid #e0e0e0;border-top:none;">
+            Contenido de la pestana seleccionada...
+          </div>
+        </div>
+        <p style="font-size:10px;color:#B71C1C;margin-top:6px;">Tiempo decision entre tabs: +30 seg segun Datadog. Solo se diferencia por un underline azul sutil.</p>
+      </div>
+
+      <div class="mockup-box mockup-after">
+        <div class="mockup-label">Solucion propuesta  -  accion prioritaria con estilo Filled</div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:24px 16px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="height:32px;width:32px;display:flex;justify-content:center;align-items:center;border-radius:4px;color:white;background:#2fbfce;font-size:18px;">&#9776;</div>
+            <span style="font-size:20px;color:#080707;">Actividades</span>
+          </div>
+          <!-- Tabs con jerarquia visual -->
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div style="padding:10px 20px;font-size:14px;color:#78909C;border:1px solid #e0e0e0;border-radius:4px;cursor:pointer;background:#fff;">Operacion</div>
+            <div style="padding:10px 20px;font-size:14px;color:#fff;background:#004e70;border-radius:4px;cursor:pointer;font-weight:600;box-shadow:0 2px 6px rgba(0,78,112,0.3);">&#9998; Informe Semestral</div>
+            <!-- Badge de urgencia -->
+            <div style="padding:6px 10px;font-size:11px;color:#D83A52;background:#FFEBEE;border-radius:4px;display:flex;align-items:center;gap:4px;font-weight:600;">&#9888; Vence en 5 dias</div>
+          </div>
+          <div style="padding:20px;text-align:center;color:#78909C;font-size:13px;border:1px solid #e0e0e0;border-radius:4px;">
+            Contenido del Informe Semestral...
+          </div>
+        </div>
+        <p style="font-size:10px;color:#2E7D32;margin-top:6px;"><strong>Cambio:</strong> Usar <code>kendoButton look="flat"</code> para Operacion y <code>themeColor="primary"</code> para Informe Semestral. Agregar badge de fecha limite.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- R6: Loading States -->
+<div class="modal-overlay" id="modal-r6">
+  <div class="modal-content">
+    <div class="modal-header" style="background:#004e70;">
+      <h3>R6  -  Loading states reales en vez de "No hay informacion"</h3>
+      <button class="modal-close" onclick="closeModal('modal-r6')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;"><strong>Problema:</strong> <code>fi-no-content</code> se muestra ANTES de que la API responda. En <code>dashboard.component</code> se usa <code>*ngIf="!isLoading; else showSpinner"</code> pero en SAR no existe este patron.</p>
+
+      <div class="mockup-box mockup-before">
+        <div class="mockup-label">Vista real actual  -  componente <code>no-content</code></div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:24px 16px;">
+          <div style="font-weight:bold;font-size:20px;color:#080707;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+            <div style="height:32px;width:32px;display:flex;justify-content:center;align-items:center;border-radius:4px;color:white;background:#818edc;font-size:16px;">&#128203;</div>
+            Tareas
+          </div>
+          <!-- Replica del estado vacio real -->
+          <div style="text-align:center;padding:40px;border:1px dashed #e0e0e0;border-radius:4px;">
+            <div style="font-size:48px;opacity:0.3;margin-bottom:8px;">&#128196;</div>
+            <div style="font-size:14px;color:#a9b1bb;font-weight:500;">No hay informacion disponible</div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#B71C1C;margin-top:6px;">Este mensaje aparece mientras <code>isLoading = true</code> porque el guard <code>*ngIf</code> evalua antes de recibir datos de la API</p>
+      </div>
+
+      <div class="mockup-box mockup-after">
+        <div class="mockup-label">Solucion propuesta  -  reusar patron de <code>dashboard.component:195-199</code></div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;padding:24px 16px;">
+          <div style="font-weight:bold;font-size:20px;color:#080707;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+            <div style="height:32px;width:32px;display:flex;justify-content:center;align-items:center;border-radius:4px;color:white;background:#818edc;font-size:16px;">&#128203;</div>
+            Tareas
+          </div>
+          <!-- Skeleton loader replicando la estructura de fi-project-card -->
+          <div style="border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;">
+              <div style="flex:1;">
+                <div style="height:10px;background:#e0e0e0;border-radius:3px;width:30%;margin-bottom:8px;animation:pulse 1.5s infinite;"></div>
+                <div style="height:16px;background:#e0e0e0;border-radius:3px;width:55%;margin-bottom:12px;animation:pulse 1.5s infinite;"></div>
+                <div style="display:flex;gap:16px;">
+                  <div><div style="height:8px;background:#e0e0e0;border-radius:3px;width:60px;margin-bottom:4px;"></div><div style="height:12px;background:#e0e0e0;border-radius:3px;width:100px;"></div></div>
+                  <div><div style="height:8px;background:#e0e0e0;border-radius:3px;width:80px;margin-bottom:4px;"></div><div style="height:12px;background:#e0e0e0;border-radius:3px;width:90px;"></div></div>
+                </div>
+              </div>
+              <div style="width:80px;display:flex;gap:4px;justify-content:flex-end;">
+                <div style="height:18px;background:#e0e0e0;border-radius:10px;width:60px;"></div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid #e0e0e0;border-radius:4px;padding:16px;opacity:0.6;">
+            <div style="height:10px;background:#e0e0e0;border-radius:3px;width:25%;margin-bottom:8px;"></div>
+            <div style="height:16px;background:#e0e0e0;border-radius:3px;width:45%;"></div>
+          </div>
+          <div style="text-align:center;margin-top:12px;">
+            <div style="display:inline-flex;align-items:center;gap:8px;">
+              <div style="width:24px;height:24px;border:3px solid #e0e0e0;border-top:3px solid #0089b5;border-radius:50%;"></div>
+              <span style="font-size:13px;color:#0089b5;font-weight:500;">Cargando tareas...</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#2E7D32;margin-top:6px;"><strong>Implementacion:</strong> Copiar patron <code>ng-template #showSpinner</code> de <code>dashboard.component.html:195</code>. Reemplazar <code>fi-no-content</code> por <code>fi-loader</code> cuando <code>isLoading === true</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- R10: Autoguardado -->
+<div class="modal-overlay" id="modal-r10">
+  <div class="modal-content">
+    <div class="modal-header" style="background:#004e70;">
+      <h3>R10  -  Autoguardado cada 30 segundos</h3>
+      <button class="modal-close" onclick="closeModal('modal-r10')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;"><strong>Problema:</strong> No existe ningun mecanismo de autoguardado en el SAR. Con sesiones de +1h en la Matriz de Resultados, un Error 401 borra todo el trabajo.</p>
+
+      <div class="mockup-box mockup-before">
+        <div class="mockup-label">Vista real actual  -  Matriz de Resultados sin indicador de guardado</div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;">
+          <div style="background:#004e70;height:4px;border-radius:4.5px 4.5px 0 0;"></div>
+          <div style="padding:16px;">
+            <!-- Header real del tab -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span style="font-size:16px;font-weight:bold;color:#080707;">2. Resultados  -  Matriz de Indicadores</span>
+              <span style="font-size:11px;color:#a9b1bb;">Sin indicador de estado</span>
+            </div>
+            <!-- Tabla simplificada replica -->
+            <div style="overflow:hidden;border:1px solid #e0e0e0;border-radius:4px;">
+              <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                <tr style="background:#004e70;color:white;"><th style="padding:6px 8px;text-align:left;">Indicador</th><th style="padding:6px 8px;">Meta</th><th style="padding:6px 8px;">Avance</th><th style="padding:6px 8px;">Notas</th></tr>
+                <tr style="border-bottom:1px solid #e0e0e0;"><td style="padding:6px 8px;">Km de carretera</td><td style="padding:6px 8px;text-align:center;">150</td><td style="padding:6px 8px;text-align:center;">87</td><td style="padding:6px 8px;"><textarea style="width:100%;height:28px;border:1px solid #e0e0e0;border-radius:3px;font-size:10px;padding:4px;resize:none;">Se completaron 87 km del tramo norte...</textarea></td></tr>
+                <tr><td style="padding:6px 8px;">Escuelas renovadas</td><td style="padding:6px 8px;text-align:center;">25</td><td style="padding:6px 8px;text-align:center;">18</td><td style="padding:6px 8px;"><textarea style="width:100%;height:28px;border:1px solid #e0e0e0;border-radius:3px;font-size:10px;padding:4px;resize:none;">Pendientes 7 escuelas por...</textarea></td></tr>
+              </table>
+            </div>
+            <div style="text-align:center;margin-top:16px;padding:10px;background:#FFEBEE;border-radius:4px;">
+              <span style="color:#B71C1C;font-weight:600;font-size:13px;">&#10060; Error 401  -  45 minutos de trabajo perdidos</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#B71C1C;margin-top:6px;">Sesiones Datadog: hasta 1h 21min. No hay <code>setInterval</code> ni <code>debounce</code> de guardado en ningun servicio del SAR.</p>
+      </div>
+
+      <div class="mockup-box mockup-after">
+        <div class="mockup-label">Solucion propuesta  -  autoguardado con indicador en la UI real</div>
+        <div style="background:#fff;border-radius:4.5px;border:1px solid #e0e0e0;box-shadow:0px 3px 6px #00000033;">
+          <div style="background:#004e70;height:4px;border-radius:4.5px 4.5px 0 0;"></div>
+          <div style="padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span style="font-size:16px;font-weight:bold;color:#080707;">2. Resultados  -  Matriz de Indicadores</span>
+              <!-- Indicador de autoguardado -->
+              <span style="font-size:12px;color:#00854D;font-weight:600;display:flex;align-items:center;gap:6px;background:#E8F5E9;padding:4px 12px;border-radius:4px;">
+                <span style="font-size:14px;">&#10003;</span> Guardado hace 12 seg
+              </span>
+            </div>
+            <div style="overflow:hidden;border:1px solid #e0e0e0;border-radius:4px;">
+              <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                <tr style="background:#004e70;color:white;"><th style="padding:6px 8px;text-align:left;">Indicador</th><th style="padding:6px 8px;">Meta</th><th style="padding:6px 8px;">Avance</th><th style="padding:6px 8px;">Notas</th></tr>
+                <tr style="border-bottom:1px solid #e0e0e0;"><td style="padding:6px 8px;">Km de carretera</td><td style="padding:6px 8px;text-align:center;">150</td><td style="padding:6px 8px;text-align:center;">87</td><td style="padding:6px 8px;"><textarea style="width:100%;height:28px;border:1px solid #C8E6C9;border-radius:3px;font-size:10px;padding:4px;resize:none;background:#FAFFF9;">Se completaron 87 km del tramo norte...</textarea></td></tr>
+                <tr><td style="padding:6px 8px;">Escuelas renovadas</td><td style="padding:6px 8px;text-align:center;">25</td><td style="padding:6px 8px;text-align:center;">18</td><td style="padding:6px 8px;"><textarea style="width:100%;height:28px;border:1px solid #C8E6C9;border-radius:3px;font-size:10px;padding:4px;resize:none;background:#FAFFF9;">Pendientes 7 escuelas por...</textarea></td></tr>
+              </table>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;">
+              <span style="color:#78909C;">Autoguardado cada 30 seg | <code>debounce: 2s</code></span>
+              <span style="color:#00854D;">Ultimo: 14:32:18 | Recuperable si se pierde conexion</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#2E7D32;margin-top:6px;"><strong>Implementacion:</strong> Crear <code>AutosaveService</code> con <code>setInterval(30000)</code> + <code>debounceTime(2000)</code> en los campos de formulario. Persistir en <code>localStorage</code> como fallback. Indicador visual reutilizando <code>fi-alert</code> existente.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============ CHATBOT UX ============ */
+#ux-chat-btn {
+  position: fixed; bottom: 24px; right: 24px; z-index: 900;
+  width: 56px; height: 56px; border-radius: 50%; border: none;
+  background: linear-gradient(135deg, #004e70, #0089b5); color: white;
+  font-size: 24px; cursor: pointer; box-shadow: 0 4px 20px rgba(0,78,112,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+#ux-chat-btn:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,78,112,0.5); }
+#ux-chat-btn .badge { position:absolute;top:-2px;right:-2px;background:#D83A52;color:white;font-size:10px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700; }
+
+#ux-chat-panel {
+  display: none; position: fixed; bottom: 90px; right: 24px; z-index: 901;
+  width: 420px; max-height: 600px; border-radius: 16px;
+  background: white; box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  flex-direction: column; overflow: hidden;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+#ux-chat-panel.open { display: flex; }
+#ux-chat-header {
+  background: linear-gradient(135deg, #004e70, #0089b5); color: white;
+  padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+}
+#ux-chat-header h4 { margin: 0; font-size: 15px; font-weight: 600; }
+#ux-chat-header span { font-size: 11px; opacity: 0.8; }
+#ux-chat-title { display: flex; align-items: center; gap: 8px; }
+#ux-chat-title .bot-icon { width: 26px; height: 26px; border-radius: 50%; background: #fff; color: #004e70; display: flex; align-items: center; justify-content: center; font-size: 15px; flex: 0 0 auto; }
+#ux-chat-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+#ux-chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px; max-height: 400px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.chat-msg { max-width: 88%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.chat-msg.bot { background: #E8F4FD; color: #263238; align-self: flex-start; border-bottom-left-radius: 4px; }
+.chat-msg.bot::before { content: "Luma"; display: block; color: #004e70; font-size: 10px; font-weight: 700; margin-bottom: 3px; letter-spacing: 0; }
+.chat-msg.user { background: #004e70; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-msg code { background: rgba(0,0,0,0.08); padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+.chat-msg .chip { display: inline-block; background: #fff; border: 1px solid #0089b5; color: #004e70; padding: 4px 10px; border-radius: 14px; font-size: 11px; cursor: pointer; margin: 3px 2px 0; font-weight: 600; transition: background 0.15s; }
+.chat-msg .chip:hover { background: #E8F4FD; }
+.chat-msg .sev-critical { color: #B71C1C; font-weight: 700; }
+.chat-msg .sev-alta { color: #E53935; font-weight: 600; }
+.chat-msg .sev-media { color: #FF8F00; }
+.chat-msg .status-ok { color: #1B5E20; font-weight: 600; }
+.chat-msg .status-partial { color: #0D47A1; font-weight: 600; }
+.chat-msg ul { margin: 6px 0 2px 16px; padding: 0; }
+.chat-msg li { margin-bottom: 3px; }
+#ux-chat-input-area {
+  display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #E0E0E0; background: #FAFAFA;
+}
+#ux-chat-input {
+  flex: 1; border: 1px solid #E0E0E0; border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; outline: none; font-family: inherit; resize: none;
+}
+#ux-chat-input:focus { border-color: #0089b5; box-shadow: 0 0 0 2px rgba(0,137,181,0.15); }
+#ux-chat-send {
+  background: #004e70; color: white; border: none; border-radius: 8px;
+  padding: 10px 16px; cursor: pointer; font-size: 14px; transition: background 0.15s;
+}
+#ux-chat-send:hover { background: #0089b5; }
+#ux-chat-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 16px 12px; background: #FAFAFA; }
+#ux-chat-quick .chip { display: inline-block; background: #fff; border: 1px solid #0089b5; color: #004e70; padding: 5px 12px; border-radius: 16px; font-size: 11px; cursor: pointer; font-weight: 500; transition: all 0.15s; }
+#ux-chat-quick .chip:hover { background: #004e70; color: white; }
+
+@media (max-width: 500px) {
+  #ux-chat-panel { width: calc(100vw - 20px); right: 10px; bottom: 80px; max-height: 75vh; }
+}
+</style>
+
+<!-- ============================================== -->
+<!-- CHATBOT UX - Asistente de Dolores y Soluciones -->
+<!-- ============================================== -->
+<button id="ux-chat-btn" onclick="toggleChat()" title="Asistente UX">
+  &#128172;
+  <div class="badge">UX</div>
+</button>
+
+<div id="ux-chat-panel">
+  <div id="ux-chat-header">
+    <div id="ux-chat-title">
+      <div class="bot-icon">:)</div>
+      <div>
+        <h4>Luma - voz del Portal SAR</h4>
+        <span>Usuarios reales | Evidencia UX</span>
+      </div>
+    </div>
+    <button id="ux-chat-close" onclick="toggleChat()">&times;</button>
+  </div>
+  <div id="ux-chat-messages"></div>
+  <div id="ux-chat-quick"></div>
+  <div id="ux-chat-input-area">
+    <input type="text" id="ux-chat-input" placeholder="Describe un problema UX..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button id="ux-chat-send" onclick="sendChat()">&#10148;</button>
+  </div>
+</div>
+
+<!-- Script para modales -->
+<script>
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(function(m) {
+      m.classList.remove('active');
+    });
+  }
+});
+
+/* ============================================== */
+/* CHATBOT UX ENGINE                              */
+/* ============================================== */
+(function(){
+  var KB = {
+    pantallas: [
+      {
+        id: 'login', name: 'Login / Acceso', route: '/login', mejora: 50,
+        dolores: [
+          { tag: 'Latencia Ciega', desc: 'Pantalla en blanco hasta 2 min sin indicador de carga.', sev: 'alta', rec: 'R1', estado: 'implementado', archivo: 'shared/components/loader-spinner' },
+          { tag: 'Permisos complejos', desc: 'Nuevos usuarios requieren formulario via Salesforce.', sev: 'media', rec: 'R23', estado: 'pendiente' }
+        ],
+        deseos: ['Acceso movil', 'Perfiles estandar con herencia'],
+        emocion: 'Incertidumbre'
+      },
+      {
+        id: 'dashboard', name: 'Dashboard', route: '/home', mejora: 0,
+        dolores: [
+          { tag: 'Pildora Enganosa', desc: 'Etiquetas de estado parecen botones clicables (border-radius:10px, colores saturados) pero no responden. Dead clicks en Datadog.', sev: 'alta', rec: 'R3', estado: 'pendiente', archivo: '_component__status-label.scss' },
+          { tag: 'Navegacion Intrusiva', desc: 'No hay acceso directo al SAR desde el dashboard.', sev: 'media', rec: 'R4', estado: 'pendiente' }
+        ],
+        deseos: ['Vision 360 del proyecto', 'Ingreso rapido al SAR'],
+        emocion: 'Frustracion'
+      },
+      {
+        id: 'tasks', name: 'Tareas', route: '/tasks', mejora: 15,
+        dolores: [
+          { tag: 'Ambiguedad de Seleccion', desc: 'Pestanas identicas "Operacion" e "Informe Semestral" sin jerarquia visual. +30 seg de indecision (Datadog).', sev: 'alta', rec: 'R5', estado: 'pendiente', archivo: 'activities.component.html' },
+          { tag: 'Falsa Vacuidad', desc: 'Muestra "No hay informacion" antes de que terminen de cargar los datos. Genera abandono prematuro.', sev: 'alta', rec: 'R6', estado: 'parcial', archivo: 'no-content component vs ng-template #showSpinner' }
+        ],
+        deseos: ['Alertas proactivas de fecha limite', 'Gestion multi-operacion'],
+        emocion: 'Confusion'
+      },
+      {
+        id: 'info-general', name: 'Info General', route: '/semi-annual-report', mejora: 0,
+        dolores: [
+          { tag: 'Oclusion Modal Full-Screen', desc: 'Sub-secciones 1.1-1.9 abren modal que cubre ~90% de pantalla, bloquea sidebar.', sev: 'alta', rec: 'R8b', estado: 'pendiente', archivo: 'CLIEN-1100 Ready for Analysis' },
+          { tag: 'Boton CLOSE alejado', desc: 'Boton "CLOSE" en esquina inferior derecha, lejos del area de trabajo.', sev: 'media', rec: 'R8b', estado: 'pendiente' },
+          { tag: 'Datos no editables', desc: 'Si hay errores en info general de Convergencia, no se pueden corregir.', sev: 'alta', rec: 'R7', estado: 'pendiente' },
+          { tag: 'Sin navegacion sub-secciones', desc: 'No hay "Anterior/Siguiente" dentro del modal; hay que cerrar y reabrir para pasar de 1.1 a 1.2.', sev: 'media', rec: 'R8c', estado: 'implementado', archivo: 'CLIEN-557' }
+        ],
+        deseos: ['Historial de versiones', 'Panel lateral en vez de modal', 'Navegacion Anterior/Siguiente', 'Edicion con registro de cambios'],
+        emocion: 'Relativo alivio'
+      },
+      {
+        id: 'resultados', name: 'Matriz de Resultados', route: '/semi-annual-report/results', mejora: 30,
+        critico: true,
+        dolores: [
+          { tag: 'Error 401 Silencioso', desc: 'Sesion expira sin aviso. Hasta 1h 21min de datos perdidos. Daniel Diniz: "permanecio bloqueado 44 minutos".', sev: 'critica', rec: 'R2/R10', estado: 'parcial', archivo: 'app.component.ts:312' },
+          { tag: 'Doble Scroll', desc: 'Scroll horizontal + vertical en la tabla genera fatiga extrema.', sev: 'alta', rec: 'R9', estado: 'implementado', archivo: 'CLIEN-733' },
+          { tag: 'Zona Editable Invisible', desc: 'Celdas editables indistinguibles de las de solo lectura.', sev: 'alta', rec: 'R9', estado: 'implementado', archivo: 'CLIEN-733' },
+          { tag: 'Oclusion por Sticky', desc: 'Headers fijos reducen el espacio a una rendija. Jaime Diaz: "alejaba y acercaba el zoom constantemente".', sev: 'alta', rec: 'R9', estado: 'implementado', archivo: 'CLIEN-733' },
+          { tag: 'Limite 2000 caracteres', desc: '"El numero de caracteres es muy limitado para exponer con claridad el avance".', sev: 'media', rec: 'R11/R12', estado: 'implementado', archivo: 'rich-text-editor.component.ts' },
+          { tag: 'Sin Autoguardado', desc: 'No hay setInterval ni debounce. Cynthia Terry: "I got error code 401 and lost all work not saved".', sev: 'critica', rec: 'R10', estado: 'pendiente' },
+          { tag: 'Avances anteriores no editables', desc: 'Anos anteriores bloqueados, correcciones solo via notas.', sev: 'media', rec: 'R25', estado: 'pendiente' }
+        ],
+        deseos: ['Carga masiva Excel/CSV', 'Exportar a Excel', 'Columnas sticky', 'Datos del periodo anterior como guia', 'Indicadores analiticos avanzados'],
+        emocion: 'Agotamiento + Ansiedad'
+      },
+      {
+        id: 'riesgos', name: 'Matriz de Riesgos', route: '/semi-annual-report/risks', mejora: 10,
+        dolores: [
+          { tag: 'No agregar riesgos', desc: 'No se pueden crear nuevos riesgos. Workaround: editar riesgos vencidos. Carlos Alvarez: "No esta habilitada la opcion".', sev: 'alta', rec: 'R14', estado: 'parcial', archivo: 'CLIEN-1103 en curso' },
+          { tag: 'Cambios no impactan Convergencia', desc: 'Modificaciones solo se reflejan en el PDF, no en Convergencia.', sev: 'alta', rec: 'R30', estado: 'parcial', archivo: 'models/Convergencia.ts' },
+          { tag: 'Iconografia confusa', desc: 'Semaforos de riesgo tienen mas peso visual que los botones de accion.', sev: 'media', rec: 'R15', estado: 'pendiente' }
+        ],
+        deseos: ['Crear riesgos nuevos', 'Tracker de ruta critica', 'Riesgos operativos ultima milla', 'Traduccion automatica'],
+        emocion: 'Impotencia'
+      },
+      {
+        id: 'lecciones', name: 'Lecciones Aprendidas', route: '/semi-annual-report/lessons', mejora: 0,
+        dolores: [
+          { tag: 'IA poco flexible', desc: 'El texto generado no da espacio a retroalimentacion real. Bruno Candia: "no nos daba espacios para realmente hacer una retroalimentacion".', sev: 'media', rec: 'R16', estado: 'implementado', archivo: 'CLIEN-920' },
+          { tag: '4 preguntas obligatorias', desc: 'Carga excesiva por leccion aprendida (circunstancias, implicaciones, consecuencias, recomendaciones).', sev: 'media', rec: 'R17', estado: 'implementado', archivo: 'CLIEN-920' },
+          { tag: 'Leccion obligatoria', desc: 'Debe existir al menos una leccion para poder enviar.', sev: 'media', rec: 'R17', estado: 'implementado', archivo: 'CLIEN-920' }
+        ],
+        deseos: ['IA como borrador sugerido', 'Mas roles con acceso'],
+        emocion: 'Ambivalencia'
+      },
+      {
+        id: 'anexos', name: 'Anexos', route: '/semi-annual-report/annexes', mejora: 0,
+        dolores: [
+          { tag: 'Solo enlaces, no archivos', desc: 'No se pueden adjuntar PDFs directamente. Nydia Beltran: "Se sugiere poder cargar documentos en PDF".', sev: 'media', rec: 'R18', estado: 'pendiente' },
+          { tag: 'Verificacion de permisos', desc: 'Se debe verificar que el BID tenga permisos, sin validacion automatica.', sev: 'baja', rec: 'R19', estado: 'parcial', archivo: 'CLIEN-524' }
+        ],
+        deseos: ['Subir archivos directos', 'Repositorio documental', 'Descarga masiva ZIP'],
+        emocion: 'Confusion leve'
+      },
+      {
+        id: 'envio', name: 'Envio del Informe', route: '/semi-annual-report/send', mejora: 30,
+        critico: true,
+        dolores: [
+          { tag: 'Boton desaparecido', desc: 'El boton de envio no aparece sin explicar que falta. Luis Ochoa: "simplemente queda vacio y toca llamar a reportar".', sev: 'critica', rec: 'R20', estado: 'parcial', archivo: 'r-contracts-stepper (patron existente)' },
+          { tag: 'Sin feedback de validacion', desc: 'No indica que secciones estan incompletas.', sev: 'critica', rec: 'R20', estado: 'parcial' },
+          { tag: 'Sin confirmacion post-envio', desc: 'Despues de enviar no aparece mensaje de confirmacion ni estado final.', sev: 'alta', rec: 'R21', estado: 'implementado', archivo: 'ConfirmCancelDialogComponent' },
+          { tag: 'Observaciones fuera del sistema', desc: 'Comentarios del Banco por correo, sin trazabilidad digital.', sev: 'alta', rec: 'R31', estado: 'parcial', archivo: 'dialog-comments component' },
+          { tag: 'Permisos de envio opacos', desc: 'Solo quien tiene permiso "Presentar" puede enviar. El editor completa todo pero no puede enviar.', sev: 'alta', rec: 'R23', estado: 'pendiente' }
+        ],
+        deseos: ['Stepper de validacion', 'Reporte ejecutivo 1-clic', 'Modo borrador colaborativo', 'Observaciones dentro del sistema'],
+        emocion: 'Panico + Abandono'
+      }
+    ],
+    quickWins: ['R1','R2','R3','R5','R6','R10','R11','R12','R21'],
+    stats: { dolores: 76, deseos: 25, pantallas: 9, satisfaccion: '88%', recomendaciones: 32 }
+  };
+
+  var msgs = document.getElementById('ux-chat-messages');
+  var input = document.getElementById('ux-chat-input');
+  var quickDiv = document.getElementById('ux-chat-quick');
+  var UX_COPILOT_API_URL = window.UX_COPILOT_API_URL ||
+    (window.location.protocol === 'file:' ? 'http://localhost:8080/ask-ux' : '/ask-ux');
+  var chatHistory = [];
+
+  function addMsg(text, type) {
+    var d = document.createElement('div');
+    d.className = 'chat-msg ' + type;
+    d.innerHTML = text;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    // Wire chip clicks
+    d.querySelectorAll('.chip').forEach(function(c) {
+      c.addEventListener('click', function() {
+        input.value = c.textContent;
+        sendChat();
+      });
+    });
+    return d;
+  }
+
+  function escapeHtml(text) {
+    return String(text || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderBotText(text) {
+    return escapeHtml(text)
+      .replace(/^###\s?(.*)$/gm, '<strong>$1</strong>')
+      .replace(/^##\s?(.*)$/gm, '<strong>$1</strong>')
+      .replace(/^#\s?(.*)$/gm, '<strong>$1</strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n{2,}/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function askUxCopilot(q) {
+    return fetch(UX_COPILOT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: q,
+        messages: chatHistory.slice(-8)
+      })
+    })
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        if (!data.ok || !data.answer) {
+          throw new Error(data.error || 'Respuesta vacia del UX Copilot');
+        }
+
+        var meta = typeof data.evidence_count === 'number'
+          ? '<br><br><small>Evidencia recuperada: ' + data.evidence_count + ' registro(s)</small>'
+          : '';
+
+        return renderBotText(data.answer) + meta;
+      });
+  }
+
+  function sevLabel(s) {
+    if (s === 'critica') return '<span class="sev-critical">CRITICA</span>';
+    if (s === 'alta') return '<span class="sev-alta">ALTA</span>';
+    return '<span class="sev-media">MEDIA</span>';
+  }
+  function estadoLabel(e) {
+    if (e === 'implementado') return '<span class="status-tag status-implemented">IMPLEMENTADO</span>';
+    if (e === 'parcial') return '<span class="status-tag status-partial">PARCIAL</span>';
+    return '<span class="status-tag status-pending">PENDIENTE</span>';
+  }
+
+  function findScreen(q) {
+    q = q.toLowerCase();
+    var map = {
+      'login': 'login', 'acceso': 'login', 'autenticacion': 'login', 'sesion': 'login', '401': 'resultados',
+      'dashboard': 'dashboard', 'home': 'dashboard', 'pildora': 'dashboard', 'pill': 'dashboard', 'dead click': 'dashboard',
+      'tarea': 'tasks', 'tasks': 'tasks', 'pestana': 'tasks', 'tab': 'tasks',
+      'info general': 'info-general', 'informacion general': 'info-general', 'modal': 'info-general', 'sub-seccion': 'info-general', 'subseccion': 'info-general',
+      'resultado': 'resultados', 'matriz': 'resultados', 'indicador': 'resultados', 'autoguardado': 'resultados', 'autosave': 'resultados', 'scroll': 'resultados', 'caracteres': 'resultados', 'excel': 'resultados', 'digitador': 'resultados',
+      'riesgo': 'riesgos', 'risk': 'riesgos', 'convergencia': 'riesgos',
+      'leccion': 'lecciones', 'ia': 'lecciones', 'inteligencia': 'lecciones', 'borrador': 'lecciones',
+      'anexo': 'anexos', 'archivo': 'anexos', 'pdf': 'anexos', 'enlace': 'anexos', 'link': 'anexos',
+      'envio': 'envio', 'enviar': 'envio', 'boton': 'envio', 'send': 'envio', 'stepper': 'envio', 'validacion': 'envio'
+    };
+    for (var key in map) { if (q.indexOf(key) !== -1) return map[key]; }
+    return null;
+  }
+
+  function findDolor(q) {
+    q = q.toLowerCase();
+    var results = [];
+    KB.pantallas.forEach(function(p) {
+      p.dolores.forEach(function(d) {
+        if (d.tag.toLowerCase().indexOf(q) !== -1 || d.desc.toLowerCase().indexOf(q) !== -1) {
+          results.push({ dolor: d, pantalla: p });
+        }
+      });
+    });
+    return results;
+  }
+
+  function processQuery(q) {
+    var ql = q.toLowerCase().trim();
+
+    // Saludo
+    if (/^(hola|hi|hello|hey|buenos|buenas)/.test(ql)) {
+      return 'Hola! Soy el asistente UX del Portal SAR. Tengo mapeados <strong>' + KB.stats.dolores + ' dolores</strong> en <strong>' + KB.stats.pantallas + ' pantallas</strong>. Preguntame sobre:<ul>' +
+        '<li>Una pantalla especifica (ej: "matriz de resultados")</li>' +
+        '<li>Un dolor puntual (ej: "error 401")</li>' +
+        '<li>Estado de implementacion (ej: "que esta implementado")</li>' +
+        '<li>Prioridades (ej: "quick wins")</li></ul>' +
+        'O usa los accesos rapidos de abajo.';
+    }
+
+    // Resumen general
+    if (/resumen|general|overview|todo|completo/.test(ql)) {
+      var criticos = 0, altos = 0, impl = 0, parcial = 0;
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.sev === 'critica') criticos++;
+          if (d.sev === 'alta') altos++;
+          if (d.estado === 'implementado') impl++;
+          if (d.estado === 'parcial') parcial++;
+        });
+      });
+      return '<strong>Resumen del Journey Map SAR</strong><ul>' +
+        '<li>' + KB.stats.dolores + ' dolores identificados en ' + KB.stats.pantallas + ' pantallas</li>' +
+        '<li>' + criticos + ' de severidad ' + sevLabel('critica') + ' | ' + altos + ' de severidad ' + sevLabel('alta') + '</li>' +
+        '<li>' + impl + ' soluciones ' + estadoLabel('implementado') + ' | ' + parcial + ' ' + estadoLabel('parcial') + '</li>' +
+        '<li>' + KB.stats.satisfaccion + ' satisfaccion positiva (pero el 12% revela dolores criticos)</li></ul>' +
+        '<strong>Los 2 puntos mas criticos:</strong><ul>' +
+        '<li><span class="chip">Matriz de Resultados</span>  -  convergencia de los 5 dolores mas severos</li>' +
+        '<li><span class="chip">Envio del Informe</span>  -  principal causa de tickets de soporte</li></ul>';
+    }
+
+    // Quick wins
+    if (/quick|win|rapido|inmediato|facil|priorid/.test(ql)) {
+      var html = '<strong>Quick Wins  -  Implementacion inmediata</strong><ul>';
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (KB.quickWins.indexOf(d.rec) !== -1 || KB.quickWins.indexOf(d.rec.split('/')[0]) !== -1) {
+            html += '<li><strong>' + d.rec + '</strong> ' + d.tag + '  -  ' + estadoLabel(d.estado) + '</li>';
+          }
+        });
+      });
+      html += '</ul>Los pendientes criticos: <span class="chip">autoguardado</span> <span class="chip">error 401</span> <span class="chip">pildoras</span>';
+      return html;
+    }
+
+    // Implementado / estado
+    if (/implementado|listo|hecho|completado|resuelto/.test(ql)) {
+      var html = '<strong>Soluciones ya implementadas en codigo:</strong><ul>';
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.estado === 'implementado') {
+            html += '<li><strong>' + d.rec + '</strong> ' + d.tag + ' <em>(' + p.name + ')</em>';
+            if (d.archivo) html += '  -  <code>' + d.archivo + '</code>';
+            html += '</li>';
+          }
+        });
+      });
+      html += '</ul>';
+      return html;
+    }
+
+    // Parcial
+    if (/parcial|desarrollo|progress|avance/.test(ql)) {
+      var html = '<strong>Soluciones parcialmente implementadas:</strong><ul>';
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.estado === 'parcial') {
+            html += '<li><strong>' + d.rec + '</strong> ' + d.tag + ' <em>(' + p.name + ')</em>';
+            if (d.archivo) html += '  -  <code>' + d.archivo + '</code>';
+            html += '</li>';
+          }
+        });
+      });
+      html += '</ul>Estas requieren completar la implementacion existente, no empezar de cero.';
+      return html;
+    }
+
+    // Pendiente
+    if (/pendiente|falta|sin hacer|no implementado|missing/.test(ql)) {
+      var html = '<strong>Dolores sin resolver (pendientes):</strong><ul>';
+      var count = 0;
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.estado === 'pendiente' && (d.sev === 'critica' || d.sev === 'alta')) {
+            html += '<li>' + sevLabel(d.sev) + ' <strong>' + d.rec + '</strong> ' + d.tag + ' <em>(' + p.name + ')</em></li>';
+            count++;
+          }
+        });
+      });
+      html += '</ul>Total criticos/altos pendientes: <strong>' + count + '</strong>. Pregunta por una pantalla para mas detalle: ';
+      html += '<span class="chip">Resultados</span> <span class="chip">Envio</span> <span class="chip">Dashboard</span>';
+      return html;
+    }
+
+    // Critico / critica
+    if (/critic|urgente|grave|bloqueante/.test(ql)) {
+      var html = '<strong>Dolores de severidad CRITICA:</strong><ul>';
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.sev === 'critica') {
+            html += '<li><strong>' + d.tag + '</strong>  -  ' + d.desc.substring(0,80) + '... <em>(' + p.name + ')</em> ' + estadoLabel(d.estado) + '</li>';
+          }
+        });
+      });
+      html += '</ul><span class="chip">Matriz de Resultados</span> <span class="chip">Envio del Informe</span>';
+      return html;
+    }
+
+    // Mejora / porcentaje
+    if (/mejora|porcentaje|progreso|%/.test(ql)) {
+      var html = '<strong>% de Mejora por pantalla:</strong><ul>';
+      KB.pantallas.forEach(function(p) {
+        var bar = p.mejora > 40 ? 'status-ok' : (p.mejora > 0 ? 'status-partial' : 'sev-critical');
+        html += '<li><strong>' + p.name + '</strong>: <span class="' + bar + '">' + p.mejora + '%</span></li>';
+      });
+      html += '</ul>Promedio global: <strong>15%</strong>. Las pantallas criticas (Resultados, Envio) estan al 30%.';
+      return html;
+    }
+
+    // Busqueda por pantalla
+    var screenId = findScreen(ql);
+    if (screenId) {
+      var p = KB.pantallas.find(function(x) { return x.id === screenId; });
+      if (p) {
+        var html = '<strong>' + p.name + '</strong> <code>' + p.route + '</code><br>';
+        html += 'Emocion: <em>' + p.emocion + '</em> | Mejora: <strong>' + p.mejora + '%</strong>';
+        if (p.critico) html += ' | <span class="sev-critical">PANTALLA CRITICA</span>';
+        html += '<br><br><strong>Dolores (' + p.dolores.length + '):</strong><ul>';
+        p.dolores.forEach(function(d) {
+          html += '<li>' + sevLabel(d.sev) + ' <strong>' + d.tag + '</strong>  -  ' + d.desc.substring(0,100);
+          html += '<br>' + d.rec + ': ' + estadoLabel(d.estado);
+          if (d.archivo) html += ' <code>' + d.archivo + '</code>';
+          html += '</li>';
+        });
+        html += '</ul><strong>Deseos:</strong> ' + p.deseos.join(', ');
+        return html;
+      }
+    }
+
+    // Busqueda por dolor
+    var dolorResults = findDolor(ql);
+    if (dolorResults.length > 0) {
+      var html = '<strong>' + dolorResults.length + ' resultado(s) para "' + q + '":</strong><ul>';
+      dolorResults.forEach(function(r) {
+        html += '<li><strong>' + r.dolor.tag + '</strong> ' + sevLabel(r.dolor.sev) + '<br>' + r.dolor.desc + '<br>Pantalla: <em>' + r.pantalla.name + '</em> | Rec: ' + r.dolor.rec + ' | ' + estadoLabel(r.dolor.estado);
+        if (r.dolor.archivo) html += '<br>Archivo: <code>' + r.dolor.archivo + '</code>';
+        html += '</li>';
+      });
+      html += '</ul>';
+      return html;
+    }
+
+    // Recomendacion especifica
+    var recMatch = ql.match(/r(\d+)/);
+    if (recMatch) {
+      var rNum = 'R' + recMatch[1];
+      var found = [];
+      KB.pantallas.forEach(function(p) {
+        p.dolores.forEach(function(d) {
+          if (d.rec.indexOf(rNum) !== -1) found.push({ dolor: d, pantalla: p });
+        });
+      });
+      if (found.length > 0) {
+        var html = '<strong>Recomendacion ' + rNum + ':</strong><ul>';
+        found.forEach(function(f) {
+          html += '<li><strong>' + f.dolor.tag + '</strong> en <em>' + f.pantalla.name + '</em><br>' + f.dolor.desc + '<br>Severidad: ' + sevLabel(f.dolor.sev) + ' | Estado: ' + estadoLabel(f.dolor.estado);
+          if (f.dolor.archivo) html += '<br>Codigo: <code>' + f.dolor.archivo + '</code>';
+          html += '</li>';
+        });
+        html += '</ul>';
+        return html;
+      }
+    }
+
+    // No encontro
+    return 'No encontre resultados exactos para "<em>' + q + '</em>". Intenta con:<ul>' +
+      '<li>Nombre de pantalla: <span class="chip">Dashboard</span> <span class="chip">Resultados</span> <span class="chip">Envio</span></li>' +
+      '<li>Un dolor: <span class="chip">error 401</span> <span class="chip">pildora</span> <span class="chip">autoguardado</span></li>' +
+      '<li>Estado: <span class="chip">implementado</span> <span class="chip">pendiente</span> <span class="chip">quick wins</span></li></ul>';
+  }
+
+  // Public functions
+  window.toggleChat = function() {
+    var panel = document.getElementById('ux-chat-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open') && msgs.children.length === 0) {
+      var greeting = 'Hola, soy <strong>Luma</strong>. Hablo desde la experiencia real de usuarios del Portal SAR. Preguntame que se siente dificil, confuso o valioso en el portal.';
+      addMsg(greeting, 'bot');
+      chatHistory.push({
+        role: 'assistant',
+        content: 'Hola, soy Luma. Hablo desde la experiencia real de usuarios del Portal SAR. Preguntame que se siente dificil, confuso o valioso en el portal.'
+      });
+      quickDiv.innerHTML = '';
+    }
+  };
+
+  window.sendChat = function() {
+    var q = input.value.trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    chatHistory.push({ role: 'user', content: q });
+    input.value = '';
+    var loadingMsg = addMsg('Pensando...', 'bot');
+
+    askUxCopilot(q)
+      .then(function(answerHtml) {
+        if (loadingMsg.parentNode) loadingMsg.parentNode.removeChild(loadingMsg);
+        addMsg(answerHtml, 'bot');
+        chatHistory.push({
+          role: 'assistant',
+          content: answerHtml.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+        });
+      })
+      .catch(function(error) {
+        console.warn('UX Copilot API no disponible. Usando KB local.', error);
+        if (loadingMsg.parentNode) loadingMsg.parentNode.removeChild(loadingMsg);
+        var fallbackAnswer = processQuery(q) + '<br><br><small>Nota: no se pudo conectar con BigQuery/GPT, asi que use la base local del reporte.</small>';
+        addMsg(fallbackAnswer, 'bot');
+        chatHistory.push({
+          role: 'assistant',
+          content: fallbackAnswer.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+        });
+      });
+  };
+})();
+</script>
+
+</body>
+</html>
+
