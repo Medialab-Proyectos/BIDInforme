@@ -1,0 +1,15 @@
+# Credenciales — NUNCA subir
+.env
+*.json.key
+*service-account*.json
+*-d7ce8f1ae84c.json
+
+# Dependencias
+node_modules/
+
+# Logs
+*.log
+*.err.log
+
+# Cache Angular
+.angular/
